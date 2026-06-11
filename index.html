@@ -171,102 +171,102 @@ const defaultPlaces = [
   {
     name: "잠실",
     full: "서울특별시 송파구 잠실동",
+    boundaryName: "잠실동",
+    lat: 37.5065,
+    lng: 127.0840
+  },
+  {
+    name: "잠실동",
+    full: "서울특별시 송파구 잠실동",
+    boundaryName: "잠실동",
     lat: 37.5065,
     lng: 127.0840
   },
   {
     name: "방이",
     full: "서울특별시 송파구 방이동",
+    boundaryName: "방이동",
     lat: 37.5150,
     lng: 127.1127
   },
   {
     name: "방이동",
     full: "서울특별시 송파구 방이동",
+    boundaryName: "방이동",
     lat: 37.5150,
     lng: 127.1127
   },
   {
     name: "성수",
     full: "서울특별시 성동구 성수동",
+    boundaryName: "성수동",
     lat: 37.5446,
     lng: 127.0557
   },
   {
     name: "성수동",
     full: "서울특별시 성동구 성수동",
+    boundaryName: "성수동",
     lat: 37.5446,
     lng: 127.0557
   },
   {
+    name: "압구정",
+    full: "서울특별시 강남구 압구정동",
+    boundaryName: "압구정동",
+    lat: 37.5271,
+    lng: 127.0286
+  },
+  {
+    name: "압구정동",
+    full: "서울특별시 강남구 압구정동",
+    boundaryName: "압구정동",
+    lat: 37.5271,
+    lng: 127.0286
+  },
+  {
     name: "미사",
     full: "경기도 하남시 미사동",
+    boundaryName: "미사동",
     lat: 37.5672,
     lng: 127.1906
   },
   {
     name: "연수",
     full: "인천광역시 연수구 연수동",
+    boundaryName: "연수동",
     lat: 37.4100,
     lng: 126.6783
   },
   {
     name: "연수동",
     full: "인천광역시 연수구 연수동",
+    boundaryName: "연수동",
     lat: 37.4100,
     lng: 126.6783
   },
   {
-    name: "압구정",
-    full: "서울특별시 강남구 압구정동",
-    lat: 37.5271,
-    lng: 127.0286,
-    boundary: true
-  },
-  {
-    name: "압구정동",
-    full: "서울특별시 강남구 압구정동",
-    lat: 37.5271,
-    lng: 127.0286,
-    boundary: true
-  },
-  {
     name: "판교",
     full: "경기도 성남시 분당구 판교동",
+    boundaryName: "판교동",
     lat: 37.3947,
     lng: 127.1112
   },
   {
     name: "강남",
     full: "서울특별시 강남구",
+    boundaryName: "강남구",
     lat: 37.4979,
     lng: 127.0276
   },
   {
     name: "송파",
     full: "서울특별시 송파구",
+    boundaryName: "송파구",
     lat: 37.5145,
     lng: 127.1059
   }
 ];
-
-const apgujeongBoundary = {
-  type: "Feature",
-  geometry: {
-    type: "Polygon",
-    coordinates: [[
-      [127.0188, 37.5218],
-      [127.0265, 37.5220],
-      [127.0385, 37.5237],
-      [127.0465, 37.5268],
-      [127.0470, 37.5335],
-      [127.0382, 37.5352],
-      [127.0260, 37.5350],
-      [127.0192, 37.5312],
-      [127.0188, 37.5218]
-    ]]
-  }
-};
 
 function showMap(lat, lng, zoom, title) {
   document.getElementById("home").style.display = "none";
@@ -285,14 +285,7 @@ function showMap(lat, lng, zoom, title) {
       map.invalidateSize();
     }
 
-    if (boundaryLayer) {
-      map.removeLayer(boundaryLayer);
-      boundaryLayer = null;
-    }
-
-    if (currentMarker) {
-      map.removeLayer(currentMarker);
-    }
+    clearMapLayers();
 
     currentMarker = L.marker([lat, lng])
       .addTo(map)
@@ -302,19 +295,16 @@ function showMap(lat, lng, zoom, title) {
   }, 100);
 }
 
-function drawApgujeongBoundary() {
-  if (!map) return;
+function clearMapLayers() {
+  if (boundaryLayer) {
+    map.removeLayer(boundaryLayer);
+    boundaryLayer = null;
+  }
 
-  boundaryLayer = L.geoJSON(apgujeongBoundary, {
-    style: {
-      color: "#0066ff",
-      weight: 3,
-      fillColor: "#3388ff",
-      fillOpacity: 0.15
-    }
-  }).addTo(map);
-
-  map.fitBounds(boundaryLayer.getBounds());
+  if (currentMarker) {
+    map.removeLayer(currentMarker);
+    currentMarker = null;
+  }
 }
 
 async function getPlaces() {
@@ -334,6 +324,51 @@ async function getPlaces() {
 
   } catch (error) {
     return defaultPlaces;
+  }
+}
+
+async function drawBoundaryByName(boundaryName) {
+  if (!map || !boundaryName) return;
+
+  try {
+    const response = await fetch("./data/seoul-boundaries.geojson");
+    const geojson = await response.json();
+
+    const matchingFeatures = geojson.features.filter(feature => {
+      const props = feature.properties || {};
+
+      return (
+        props.name === boundaryName ||
+        props.adm_nm === boundaryName ||
+        props.ADM_NM === boundaryName ||
+        props.emd_nm === boundaryName ||
+        props.EMD_NM === boundaryName ||
+        props.full_nm === boundaryName
+      );
+    });
+
+    if (matchingFeatures.length === 0) {
+      return;
+    }
+
+    const selectedGeojson = {
+      type: "FeatureCollection",
+      features: matchingFeatures
+    };
+
+    boundaryLayer = L.geoJSON(selectedGeojson, {
+      style: {
+        color: "#0066ff",
+        weight: 3,
+        fillColor: "#3388ff",
+        fillOpacity: 0.15
+      }
+    }).addTo(map);
+
+    map.fitBounds(boundaryLayer.getBounds());
+
+  } catch (error) {
+    console.log("경계 데이터를 불러오지 못했습니다.");
   }
 }
 
@@ -380,16 +415,18 @@ async function searchMap() {
   );
 
   if (results.length === 1) {
+    const selected = results[0];
+
     showMap(
-      results[0].lat,
-      results[0].lng,
+      selected.lat,
+      selected.lng,
       15,
-      results[0].full
+      selected.full
     );
 
-    if (results[0].boundary) {
-      setTimeout(drawApgujeongBoundary, 200);
-    }
+    setTimeout(() => {
+      drawBoundaryByName(selected.boundaryName);
+    }, 300);
 
     return;
   }
@@ -413,9 +450,9 @@ async function searchMap() {
         selected.full
       );
 
-      if (selected.boundary) {
-        setTimeout(drawApgujeongBoundary, 200);
-      }
+      setTimeout(() => {
+        drawBoundaryByName(selected.boundaryName);
+      }, 300);
     }
 
     return;
