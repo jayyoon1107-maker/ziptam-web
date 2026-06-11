@@ -1,236 +1,218 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
 
-<meta name="description"
-content="집탐 (ZipTam) - 집 보기 전에 먼저 둘러보세요. 원하는 동네와 집을 탐색하세요.">
+<meta name="description" content="집탐 (ZipTam) - 집 보기 전에 먼저 둘러보세요. 원하는 동네와 집을 탐색하세요.">
+<meta name="keywords" content="집탐, ZipTam, 부동산, 집검색, 서울집, 동네탐색">
+<meta name="robots" content="index, follow">
 
-<meta name="keywords"
-content="집탐, ZipTam, 부동산, 집검색, 서울집, 동네탐색">
-
-<meta name="robots"
-content="index, follow">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  height:100vh;
+}
 
-font-family:
--apple-system,
-BlinkMacSystemFont,
-sans-serif;
-
-height:100vh;
-
-background:
-linear-gradient(
-rgba(0,0,0,0.28),
-rgba(0,0,0,0.28)
-),
-url("./Image.jpeg");
-
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
-
-color:white;
-
+#home{
+  height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),
+    url("./Image.jpeg");
+  background-size:cover;
+  background-position:center;
+  color:white;
 }
 
 .nav{
-
-padding:28px 48px;
-
-font-size:32px;
-
-font-weight:700;
-
+  padding:28px 48px;
+  font-size:32px;
+  font-weight:700;
 }
 
 .hero{
-
-height:calc(100vh - 100px);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-text-align:center;
-
+  height:calc(100vh - 100px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
 }
 
 .hero h1{
-
-font-size:88px;
-
-font-weight:800;
-
-margin-bottom:10px;
-
+  font-size:88px;
+  font-weight:800;
+  margin-bottom:10px;
 }
 
 .hero h2{
-
-font-size:34px;
-
-margin-bottom:18px;
-
+  font-size:34px;
+  margin-bottom:18px;
 }
 
 .hero p{
-
-font-size:28px;
-
-opacity:0.95;
-
-margin-bottom:60px;
-
+  font-size:28px;
+  margin-bottom:60px;
 }
 
 .search{
-
-width:720px;
-
-max-width:90%;
-
-background:white;
-
-border-radius:18px;
-
-display:flex;
-
-overflow:hidden;
-
-box-shadow:
-0 20px 60px rgba(0,0,0,.25);
-
+  width:720px;
+  max-width:90%;
+  background:white;
+  border-radius:18px;
+  display:flex;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
 
 .search input{
-
-flex:1;
-
-padding:26px;
-
-border:none;
-
-outline:none;
-
-font-size:22px;
-
-color:#111;
-
+  flex:1;
+  padding:26px;
+  border:none;
+  outline:none;
+  font-size:22px;
 }
 
 .search button{
-
-width:120px;
-
-border:none;
-
-background:black;
-
-color:white;
-
-font-size:20px;
-
-cursor:pointer;
-
+  width:120px;
+  border:none;
+  background:black;
+  color:white;
+  font-size:20px;
+  cursor:pointer;
 }
 
-.search button:hover{
-
-background:#222;
-
+#mapPage{
+  display:none;
+  height:100vh;
 }
 
-@media(max-width:768px){
-
-.hero h1{
-
-font-size:56px;
-
+.mapHeader{
+  height:72px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  border-bottom:1px solid #eee;
+  background:white;
 }
 
-.hero h2{
-
-font-size:24px;
-
+.mapHeader .brand{
+  font-size:24px;
+  font-weight:800;
 }
 
-.hero p{
-
-font-size:18px;
-
+.mapHeader button{
+  border:none;
+  background:#111;
+  color:white;
+  padding:12px 18px;
+  border-radius:10px;
+  cursor:pointer;
 }
 
-.search{
-
-flex-direction:column;
-
+#map{
+  height:calc(100vh - 72px);
+  width:100%;
 }
-
-.search button{
-
-width:100%;
-
-height:72px;
-
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
 
-<div class="nav">
+<section id="home">
+  <div class="nav">ZipTam</div>
 
-ZipTam
+  <div class="hero">
+    <h1>집탐</h1>
+    <h2>집을 탐색하다</h2>
+    <p>집 보기 전에 먼저 둘러보세요</p>
 
-</div>
+    <div class="search">
+      <input id="searchInput" type="text" placeholder="동네 · 아파트 · 주소 검색">
+      <button onclick="searchMap()">검색</button>
+    </div>
+  </div>
+</section>
 
-<div class="hero">
+<section id="mapPage">
+  <div class="mapHeader">
+    <div class="brand">ZipTam 집탐</div>
+    <button onclick="goHome()">처음으로</button>
+  </div>
 
-<h1>집탐</h1>
+  <div id="map"></div>
+</section>
 
-<h2>집을 탐색하다</h2>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-<p>집 보기 전에 먼저 둘러보세요</p>
+<script>
+let map;
 
-<div class="search">
+const namsan = {
+  lat: 37.5512,
+  lng: 126.9882,
+  zoom: 14
+};
 
-<input
-type="text"
-placeholder="동네 · 아파트 · 주소 검색">
+function showMap(lat, lng, zoom, label){
+  document.getElementById("home").style.display = "none";
+  document.getElementById("mapPage").style.display = "block";
 
-<button>
+  setTimeout(() => {
+    if(!map){
+      map = L.map("map").setView([lat, lng], zoom);
 
-검색
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap"
+      }).addTo(map);
+    } else {
+      map.setView([lat, lng], zoom);
+      map.invalidateSize();
+    }
 
-</button>
+    L.marker([lat, lng]).addTo(map).bindPopup(label).openPopup();
+  }, 100);
+}
 
-</div>
+function searchMap(){
+  const query = document.getElementById("searchInput").value.trim();
 
-</div>
+  if(query === ""){
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          showMap(
+            position.coords.latitude,
+            position.coords.longitude,
+            15,
+            "현재 위치"
+          );
+        },
+        () => {
+          showMap(namsan.lat, namsan.lng, namsan.zoom, "기본 위치: 남산");
+        }
+      );
+    } else {
+      showMap(namsan.lat, namsan.lng, namsan.zoom, "기본 위치: 남산");
+    }
+  } else {
+    showMap(namsan.lat, namsan.lng, namsan.zoom, query + " 검색 결과 준비 중");
+  }
+}
+
+function goHome(){
+  document.getElementById("mapPage").style.display = "none";
+  document.getElementById("home").style.display = "block";
+}
+</script>
 
 </body>
-
 </html>
