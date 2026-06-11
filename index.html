@@ -1,73 +1,106 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
-<title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
-<meta name="description" content="집탐 (ZipTam) — 집 보기 전에 먼저 둘러보세요. 집을 탐색하고 비교하세요.">
-<meta name="keywords" content="집탐, ZipTam, 집검색, 부동산">
-<meta name="robots" content="index, follow">
-<style>
+  <title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
+  <meta name="description" content="집탐 (ZipTam) — 집 보기 전에 먼저 둘러보세요. 집을 탐색하고 비교하세요.">
+  <meta name="keywords" content="집탐, ZipTam, 집검색, 부동산">
+  <meta name="robots" content="index, follow">
 
-body{
-margin:0;
-height:100vh;
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
+        url("https://images.unsplash.com/photo-1538485399081-7c8edc19e801?auto=format&fit=crop&w=1800&q=80");
+      background-size: cover;
+      background-position: center;
+      color: white;
+    }
 
-display:flex;
-justify-content:center;
-align-items:center;
+    .nav {
+      padding: 28px 48px;
+      font-size: 28px;
+      font-weight: 700;
+    }
 
-background:#ffffff;
+    .hero {
+      height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-font-family:
--apple-system,
-BlinkMacSystemFont,
-sans-serif;
+    h1 {
+      font-size: 72px;
+      margin: 0;
+    }
 
-text-align:center;
-}
+    h2 {
+      font-size: 36px;
+      margin: 12px 0 0;
+    }
 
-.container{
-max-width:700px;
-}
+    p {
+      font-size: 28px;
+      margin: 30px 0 40px;
+      font-weight: 500;
+    }
 
-h1{
-font-size:72px;
-margin:0;
-}
+    .search-box {
+      display: flex;
+      width: 620px;
+      max-width: 90%;
+      background: white;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
 
-h2{
-font-size:34px;
-font-weight:500;
-margin-top:12px;
-}
+    input {
+      flex: 1;
+      border: none;
+      padding: 24px;
+      font-size: 20px;
+      outline: none;
+    }
 
-p{
-font-size:24px;
-line-height:1.8;
-color:#555;
-margin-top:50px;
-}
+    button {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 0 30px;
+      font-size: 20px;
+      cursor: pointer;
+    }
 
-</style>
-
+    .examples {
+      margin-top: 22px;
+      font-size: 16px;
+      opacity: 0.9;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="nav">ZipTam 집탐</div>
 
-<div class="container">
+  <div class="hero">
+    <h1>ZipTam</h1>
+    <h2>집탐</h2>
+    <p>집 보기 전에 먼저 둘러보세요</p>
 
-<h1>ZipTam</h1>
+    <div class="search-box">
+      <input type="text" placeholder="어느 동네를 둘러보시겠어요? 예: 성수동, 잠실, 방이동">
+      <button>검색</button>
+    </div>
 
-<h2>집탐</h2>
-
-<p>
-집을 탐색하다
-<br><br>
-집 보기 전에 먼저 둘러보세요
-</p>
-
-</div>
-
+    <div class="examples">
+      인기 검색: 성수동 · 잠실 · 방이동 · 판교 · 미사
+    </div>
+  </div>
 </body>
-
 </html>
