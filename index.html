@@ -2,511 +2,282 @@
 <html lang="ko">
 
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1">
+<title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
 
-<title>
-집탐 | 집 보기 전에 먼저 둘러보세요
-</title>
+<meta name="description" content="집탐 (ZipTam) - 집 보기 전에 먼저 둘러보세요. 원하는 동네와 집을 탐색하세요.">
+<meta name="keywords" content="집탐, ZipTam, 부동산, 집검색, 서울집, 동네탐색">
+<meta name="robots" content="index, follow">
 
-<meta
-name="description"
-content="집탐 (ZipTam)">
-
-<link
-rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body{
-
-font-family:
--apple-system,
-BlinkMacSystemFont,
-sans-serif;
-
-height:100vh;
-
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  height: 100vh;
 }
 
-#home{
-
-height:100vh;
-
-background:
-
-linear-gradient(
-rgba(0,0,0,.28),
-rgba(0,0,0,.28)
-),
-
-url("./Image.jpeg");
-
-background-size:cover;
-
-background-position:center;
-
-color:white;
-
+#home {
+  height: 100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.28)),
+    url("./Image.jpeg");
+  background-size: cover;
+  background-position: center;
+  color: white;
 }
 
-.nav{
-
-padding:30px;
-
-font-size:32px;
-
-font-weight:700;
-
+.nav {
+  padding: 30px;
+  font-size: 32px;
+  font-weight: 700;
 }
 
-.hero{
-
-height:calc(100vh - 100px);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-text-align:center;
-
+.hero {
+  height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
-.hero h1{
-
-font-size:90px;
-
-margin-bottom:10px;
-
+.hero h1 {
+  font-size: 90px;
+  margin-bottom: 10px;
 }
 
-.hero h2{
-
-font-size:34px;
-
-margin-bottom:18px;
-
+.hero h2 {
+  font-size: 34px;
+  margin-bottom: 18px;
 }
 
-.hero p{
-
-font-size:26px;
-
-margin-bottom:60px;
-
+.hero p {
+  font-size: 26px;
+  margin-bottom: 60px;
 }
 
-.search{
-
-width:760px;
-
-max-width:90%;
-
-background:white;
-
-display:flex;
-
-border-radius:18px;
-
-overflow:hidden;
-
-box-shadow:
-0 20px 60px rgba(0,0,0,.25);
-
+.search {
+  width: 760px;
+  max-width: 90%;
+  background: white;
+  display: flex;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,.25);
 }
 
-.search input{
-
-flex:1;
-
-padding:28px;
-
-border:none;
-
-outline:none;
-
-font-size:22px;
-
+.search input {
+  flex: 1;
+  padding: 28px;
+  border: none;
+  outline: none;
+  font-size: 22px;
 }
 
-.search button{
-
-width:120px;
-
-background:black;
-
-color:white;
-
-border:none;
-
-font-size:20px;
-
-cursor:pointer;
-
+.search button {
+  width: 120px;
+  background: black;
+  color: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-#mapPage{
-
-display:none;
-
-height:100vh;
-
+#mapPage {
+  display: none;
+  height: 100vh;
 }
 
-.mapHeader{
-
-height:72px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-padding:20px;
-
-background:white;
-
-border-bottom:1px solid #ddd;
-
+.mapHeader {
+  height: 72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background: white;
+  border-bottom: 1px solid #ddd;
 }
 
-.brand{
-
-font-size:24px;
-
-font-weight:800;
-
-cursor:pointer;
-
-}
-.back{
-
-padding:12px 18px;
-
-border:none;
-
-background:black;
-
-color:white;
-
-border-radius:10px;
-
-cursor:pointer;
-
+.brand {
+  font-size: 24px;
+  font-weight: 800;
+  cursor: pointer;
 }
 
-#map{
-
-height:calc(100vh - 72px);
-
+.back {
+  padding: 12px 18px;
+  border: none;
+  background: black;
+  color: white;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
+#map {
+  height: calc(100vh - 72px);
+}
 </style>
-
 </head>
 
 <body>
 
 <section id="home">
+  <div class="nav">ZipTam</div>
 
-<div class="nav">
+  <div class="hero">
+    <h1>집탐</h1>
+    <h2>집을 탐색하다</h2>
+    <p>집 보기 전에 먼저 둘러보세요</p>
 
-ZipTam
-
-</div>
-
-<div class="hero">
-
-<h1>집탐</h1>
-
-<h2>집을 탐색하다</h2>
-
-<p>
-
-집 보기 전에 먼저 둘러보세요
-
-</p>
-
-<div class="search">
-
-<input
-id="searchInput"
-placeholder="동네 · 아파트 · 주소 검색">
-
-<button
-onclick="searchMap()">
-
-검색
-
-</button>
-
-</div>
-
-</div>
-
+    <div class="search">
+      <input id="searchInput" placeholder="동네 · 아파트 · 주소 검색">
+      <button onclick="searchMap()">검색</button>
+    </div>
+  </div>
 </section>
 
 <section id="mapPage">
+  <div class="mapHeader">
+    <div class="brand" onclick="goHome()">ZipTam 집탐</div>
+    <button class="back" onclick="goHome()">처음으로</button>
+  </div>
 
-<div class="mapHeader">
-
-<div
-class="brand"
-onclick="goHome()"
-style="cursor:pointer;">
-
-ZipTam 집탐
-
-</div>
-
-<button
-class="back"
-onclick="goHome()">
-
-처음으로
-
-</button>
-
-</div>
-
-<div id="map"></div>
-
+  <div id="map"></div>
 </section>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-
 let map;
+let currentMarker;
 
-const namsan={
-
-lat:37.5512,
-
-lng:126.9882,
-
-zoom:14
-
+const namsan = {
+  lat: 37.5512,
+  lng: 126.9882,
+  zoom: 14
 };
 
-function showMap(
-lat,
-lng,
-zoom,
-title
-){
+function showMap(lat, lng, zoom, title) {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("mapPage").style.display = "block";
 
-document
-.getElementById("home")
-.style
-.display="none";
+  setTimeout(() => {
+    if (!map) {
+      map = L.map("map").setView([lat, lng], zoom);
 
-document
-.getElementById("mapPage")
-.style
-.display="block";
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap"
+      }).addTo(map);
+    } else {
+      map.setView([lat, lng], zoom);
+      map.invalidateSize();
+    }
 
-setTimeout(()=>{
+    if (currentMarker) {
+      map.removeLayer(currentMarker);
+    }
 
-if(!map){
+    currentMarker = L.marker([lat, lng])
+      .addTo(map)
+      .bindPopup(title)
+      .openPopup();
 
-map=
-L
-.map("map")
-.setView(
-[lat,lng],
-zoom
-);
-
-L
-.tileLayer(
-
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-
-{
-
-maxZoom:19
-
+  }, 100);
 }
 
-)
+async function searchMap() {
+  const query = document.getElementById("searchInput").value.trim();
 
-.addTo(map);
+  if (query === "") {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          showMap(
+            position.coords.latitude,
+            position.coords.longitude,
+            15,
+            "현재 위치"
+          );
+        },
+        () => {
+          showMap(
+            namsan.lat,
+            namsan.lng,
+            namsan.zoom,
+            "남산"
+          );
+        }
+      );
+    } else {
+      showMap(
+        namsan.lat,
+        namsan.lng,
+        namsan.zoom,
+        "남산"
+      );
+    }
 
-}else{
+    return;
+  }
 
-map.setView(
-[lat,lng],
-zoom
-);
+  try {
+    const response = await fetch("./locations.json");
+    const places = await response.json();
 
-map.invalidateSize();
+    const results = places.filter(place =>
+      place.name.includes(query) ||
+      place.full.includes(query)
+    );
 
+    if (results.length === 1) {
+      showMap(
+        results[0].lat,
+        results[0].lng,
+        15,
+        results[0].full
+      );
+    } else if (results.length > 1) {
+      const list = results
+        .map((place, index) => `${index + 1}. ${place.full}`)
+        .join("\n");
+
+      const choice = prompt(
+        `검색 결과가 여러 개 있습니다.\n\n${list}\n\n번호를 입력하세요.`
+      );
+
+      const selected = results[Number(choice) - 1];
+
+      if (selected) {
+        showMap(
+          selected.lat,
+          selected.lng,
+          15,
+          selected.full
+        );
+      }
+    } else {
+      alert("검색 결과 없음");
+    }
+
+  } catch (error) {
+    alert("locations.json 파일을 찾을 수 없습니다.");
+  }
 }
 
-L
-.marker(
-[lat,lng]
-)
-
-.addTo(map)
-
-.bindPopup(title)
-
-.openPopup();
-
-},100);
-
+function goHome() {
+  document.getElementById("mapPage").style.display = "none";
+  document.getElementById("home").style.display = "block";
 }
-
-async function searchMap(){
-
-const query=
-
-document
-
-.getElementById("searchInput")
-
-.value
-
-.trim();
-
-if(query===""){
-
-if(
-
-navigator.geolocation
-
-){
-
-navigator
-
-.geolocation
-
-.getCurrentPosition(
-
-position=>{
-
-showMap(
-
-position.coords.latitude,
-
-position.coords.longitude,
-
-15,
-
-"현재 위치"
-
-);
-
-},
-
-()=>{
-
-showMap(
-
-namsan.lat,
-
-namsan.lng,
-
-14,
-
-"남산"
-
-);
-
-}
-
-);
-
-}
-
-return;
-
-}
-
-try{
-
-const response=
-
-await fetch(
-
-`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query+" 한국")}`
-
-);
-
-const data=
-
-await response.json();
-
-if(
-
-data.length>0
-
-){
-
-showMap(
-
-parseFloat(data[0].lat),
-
-parseFloat(data[0].lon),
-
-15,
-
-query
-
-);
-
-}else{
-
-alert(
-
-"검색 결과 없음"
-
-);
-
-}
-
-}catch{
-
-alert(
-
-"검색 실패"
-
-);
-
-}
-
-}
-
-function goHome(){
-
-document
-.getElementById("mapPage")
-.style.display="none";
-
-document
-.getElementById("home")
-.style.display="block";
-
-}
-
 </script>
 
 </body>
