@@ -6,582 +6,366 @@
 
 <title>집탐 | 집 보기 전에 먼저 둘러보세요</title>
 
-<link
-rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"
-/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <style>
-
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
 }
 
 body{
-font-family:-apple-system;
+  font-family:-apple-system,BlinkMacSystemFont,sans-serif;
 }
 
 #home{
-
-height:100vh;
-
-background:
-linear-gradient(
-rgba(0,0,0,.35),
-rgba(0,0,0,.35)
-),
-url("./Image.jpeg");
-
-background-size:cover;
-background-position:center;
-
-display:flex;
-
-flex-direction:column;
-
-color:white;
-
+  height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),
+    url("./Image.jpeg");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  flex-direction:column;
+  color:white;
 }
 
 .header{
-
-padding:30px;
-
-font-size:26px;
-
-font-weight:700;
-
-cursor:pointer;
-
+  padding:30px;
+  font-size:26px;
+  font-weight:700;
+  cursor:pointer;
 }
 
 .hero{
-
-flex:1;
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
-
-align-items:center;
-
-}
-
-.hero h1{
-
-font-size:90px;
-
-margin-bottom:20px;
-
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
 }
 
 .hero h2{
-
-font-size:50px;
-
-margin-bottom:20px;
-
+  font-size:72px;
+  margin-bottom:20px;
 }
 
 .hero p{
-
-font-size:18px;
-
-margin-bottom:40px;
-
+  font-size:22px;
+  margin-bottom:40px;
 }
 
 .search{
-
-display:flex;
-
-width:800px;
-
-max-width:90%;
-
+  display:flex;
+  width:800px;
+  max-width:90%;
 }
 
 .search input{
-
-flex:1;
-
-padding:28px;
-
-font-size:30px;
-
-border:none;
-
-border-radius:20px 0 0 20px;
-
+  flex:1;
+  padding:26px;
+  font-size:26px;
+  border:none;
+  border-radius:18px 0 0 18px;
 }
 
 .search button{
-
-width:170px;
-
-border:none;
-
-background:black;
-
-color:white;
-
-font-size:28px;
-
-cursor:pointer;
-
-border-radius:0 20px 20px 0;
-
+  width:150px;
+  border:none;
+  background:black;
+  color:white;
+  font-size:24px;
+  cursor:pointer;
+  border-radius:0 18px 18px 0;
 }
 
 #mapPage{
-
-display:none;
-
-height:100vh;
-
+  display:none;
+  height:100vh;
 }
 
 .mapHeader{
-
-height:80px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:space-between;
-
-padding:0 20px;
-
-font-size:28px;
-
-font-weight:700;
-
+  height:82px;
+  display:flex;
+  align-items:center;
+  gap:24px;
+  padding:0 24px;
+  background:white;
+  border-bottom:1px solid #e5e5e5;
 }
 
-.mapHeader div{
+.brand{
+  font-size:26px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+}
 
-cursor:pointer;
+.topSearch{
+  flex:1;
+  display:flex;
+  justify-content:center;
+}
 
+.topSearchBox{
+  display:flex;
+  width:560px;
+  max-width:100%;
+  border:1px solid #ddd;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.topSearchBox input{
+  flex:1;
+  border:none;
+  padding:16px 18px;
+  font-size:18px;
+  outline:none;
+}
+
+.topSearchBox button{
+  width:90px;
+  border:none;
+  background:black;
+  color:white;
+  font-size:17px;
+  cursor:pointer;
+}
+
+.back{
+  padding:12px 18px;
+  border:none;
+  background:black;
+  color:white;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.filters{
+  height:68px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 24px;
+  background:white;
+  border-bottom:1px solid #e5e5e5;
+}
+
+.filterBtn{
+  padding:12px 18px;
+  border:1px solid #ccc;
+  background:white;
+  border-radius:999px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.filterBtn:hover{
+  background:#f5f5f5;
 }
 
 #map{
-
-height:calc(100vh - 80px);
-
+  height:calc(100vh - 150px);
 }
-
 </style>
-
 </head>
 
 <body>
 
 <div id="home">
+  <div class="header" onclick="goHome()">ZipTam 집탐</div>
 
-<div
-class="header"
-onclick="goHome()"
->
+  <div class="hero">
+    <h2>집탐</h2>
+    <p>집 보기 전에 먼저 둘러보세요</p>
 
-ZipTam 집탐
-
+    <div class="search">
+      <input id="searchInput" placeholder="동 이름 검색">
+      <button onclick="searchMap()">검색</button>
+    </div>
+  </div>
 </div>
-
-<div class="hero">
-
-<h2>집탐</h2>
-
-<p>
-
-집 보기 전에 먼저 둘러보세요
-
-</p>
-
-<div class="search">
-
-<input
-id="searchInput"
-placeholder="동 이름 검색"
-/>
-
-<button
-onclick="searchMap()"
->
-
-검색
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
 
 <div id="mapPage">
+  <div class="mapHeader">
+    <div class="brand" onclick="goHome()">ZipTam 집탐</div>
 
-<div class="mapHeader">
+    <div class="topSearch">
+      <div class="topSearchBox">
+        <input id="mapSearchInput" placeholder="동네 · 아파트 · 주소 검색">
+        <button onclick="searchFromMap()">검색</button>
+      </div>
+    </div>
 
-<div onclick="goHome()">
+    <button class="back" onclick="goHome()">처음으로</button>
+  </div>
 
-ZipTam 집탐
+  <div class="filters">
+    <button class="filterBtn">가격</button>
+    <button class="filterBtn">평수</button>
+    <button class="filterBtn">방 / 화장실</button>
+    <button class="filterBtn">아파트</button>
+    <button class="filterBtn">빌라</button>
+    <button class="filterBtn">단독주택</button>
+    <button class="filterBtn">옵션 / 필터</button>
+  </div>
 
+  <div id="map"></div>
 </div>
-
-<button onclick="goHome()">
-
-처음으로
-
-</button>
-
-</div>
-
-<div id="map"></div>
-
-</div>
-
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script>
+let map;
+let marker;
+let boundary;
 
-let map
+const namsan = {
+  lat:37.5512,
+  lng:126.9882,
+  zoom:13
+};
 
-let marker
+const localData = {
+  "압구정":{
+    lat:37.527,
+    lng:127.028,
+    full:"서울특별시 강남구 압구정동"
+  },
+  "잠실":{
+    lat:37.513,
+    lng:127.101,
+    full:"서울특별시 송파구 잠실동"
+  },
+  "방이동":{
+    lat:37.511,
+    lng:127.116,
+    full:"서울특별시 송파구 방이동"
+  },
+  "성수동":{
+    lat:37.544,
+    lng:127.056,
+    full:"서울특별시 성동구 성수동"
+  },
+  "미사":{
+    lat:37.563,
+    lng:127.193,
+    full:"경기도 하남시 미사"
+  },
+  "연수동":{
+    lat:37.410,
+    lng:126.678,
+    full:"인천광역시 연수구 연수동"
+  },
+  "판교":{
+    lat:37.394,
+    lng:127.111,
+    full:"경기도 성남시 판교"
+  }
+};
 
-let boundary
+function showMap(lat,lng,zoom,title){
+  document.getElementById("home").style.display="none";
+  document.getElementById("mapPage").style.display="block";
 
+  document.getElementById("mapSearchInput").value =
+    title.replace("서울특별시 ","").replace("경기도 ","").replace("인천광역시 ","");
 
-const namsan={
+  setTimeout(()=>{
+    if(!map){
+      map=L.map("map");
 
-lat:37.5512,
+      L.tileLayer(
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {maxZoom:19}
+      ).addTo(map);
+    }
 
-lng:126.9882,
+    map.setView([lat,lng],zoom);
 
-zoom:13
+    if(marker){
+      map.removeLayer(marker);
+    }
 
+    if(boundary){
+      map.removeLayer(boundary);
+    }
+
+    marker=L.marker([lat,lng])
+      .addTo(map)
+      .bindPopup(title)
+      .openPopup();
+
+    boundary=L.circle([lat,lng],{
+      radius:1500,
+      color:"blue",
+      fill:true,
+      fillOpacity:.1
+    }).addTo(map);
+
+    map.invalidateSize();
+  },150);
 }
 
+async function runSearch(query){
+  if(!query){
+    showMap(namsan.lat,namsan.lng,14,"남산");
+    return;
+  }
 
-const localData={
+  if(localData[query]){
+    showMap(localData[query].lat,localData[query].lng,15,localData[query].full);
+    return;
+  }
 
-"압구정":{
-lat:37.527,
-lng:127.028,
-full:"서울특별시 강남구 압구정동"
-},
+  try{
+    const url =
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query+" 한국")}`;
 
-"잠실":{
-lat:37.513,
-lng:127.101,
-full:"서울특별시 송파구 잠실동"
-},
+    const res = await fetch(url);
+    const data = await res.json();
 
-"방이동":{
-lat:37.511,
-lng:127.116,
-full:"서울특별시 송파구 방이동"
-},
-
-"성수동":{
-lat:37.544,
-lng:127.056,
-full:"서울특별시 성동구 성수동"
-},
-
-"미사":{
-lat:37.563,
-lng:127.193,
-full:"경기도 하남시 미사"
-},
-
-"연수동":{
-lat:37.410,
-lng:126.678,
-full:"인천광역시 연수구 연수동"
-},
-
-"판교":{
-lat:37.394,
-lng:127.111,
-full:"경기도 성남시 판교"
+    if(data.length){
+      showMap(
+        Number(data[0].lat),
+        Number(data[0].lon),
+        15,
+        data[0].display_name
+      );
+    }else{
+      alert("검색 결과 없음");
+    }
+  }catch{
+    alert("검색 실패");
+  }
 }
 
+function searchMap(){
+  const q=document.getElementById("searchInput").value.trim();
+  runSearch(q);
 }
 
-
-function showMap(
-
-lat,
-lng,
-zoom,
-title
-
-){
-
-document.getElementById(
-"home"
-).style.display="none"
-
-document.getElementById(
-"mapPage"
-).style.display="block"
-
-
-setTimeout(()=>{
-
-if(!map){
-
-map=L.map("map")
-
-L.tileLayer(
-
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-
-{
-
-maxZoom:19
-
+function searchFromMap(){
+  const q=document.getElementById("mapSearchInput").value.trim();
+  runSearch(q);
 }
-
-).addTo(map)
-
-}
-
-
-map.setView(
-[lat,lng],
-zoom
-)
-
-if(marker){
-
-map.removeLayer(
-marker
-)
-
-}
-
-if(boundary){
-
-map.removeLayer(
-boundary
-)
-
-}
-
-
-marker=
-
-L.marker(
-
-[lat,lng]
-
-)
-
-.addTo(map)
-
-.bindPopup(
-title
-)
-
-.openPopup()
-
-
-boundary=
-
-L.circle(
-
-[lat,lng],
-
-{
-
-radius:1500,
-
-color:"blue",
-
-fill:true,
-
-fillOpacity:.1
-
-}
-
-)
-
-.addTo(map)
-
-map.invalidateSize()
-
-},150)
-
-}
-
-
-
-async function searchMap(){
-
-const q=
-
-document
-.getElementById(
-"searchInput"
-)
-.value
-.trim()
-
-
-if(!q){
-
-showMap(
-
-namsan.lat,
-
-namsan.lng,
-
-14,
-
-"남산"
-
-)
-
-return
-
-}
-
-
-if(localData[q]){
-
-showMap(
-
-localData[q].lat,
-
-localData[q].lng,
-
-15,
-
-localData[q].full
-
-)
-
-return
-
-}
-
-
-try{
-
-const url=
-
-`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q+" 한국")}`
-
-
-const res=
-
-await fetch(
-url
-)
-
-const data=
-
-await res.json()
-
-
-if(data.length){
-
-showMap(
-
-Number(
-data[0].lat
-),
-
-Number(
-data[0].lon
-),
-
-15,
-
-data[0].display_name
-
-)
-
-}
-
-else{
-
-alert(
-
-"검색 결과 없음"
-
-)
-
-}
-
-}
-
-catch{
-
-alert(
-
-"검색 실패"
-
-)
-
-}
-
-}
-
 
 function goHome(){
-
-document
-.getElementById(
-"mapPage"
-)
-.style
-.display="none"
-
-
-document
-.getElementById(
-"home"
-)
-.style
-.display="flex"
-
+  document.getElementById("mapPage").style.display="none";
+  document.getElementById("home").style.display="flex";
 }
 
+document.getElementById("searchInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter") searchMap();
+});
 
-document
-.getElementById(
-"searchInput"
-)
-
-.addEventListener(
-
-"keydown",
-
-e=>{
-
-if(
-
-e.key==="Enter"
-
-)
-
-searchMap()
-
-}
-
-)
-
+document.getElementById("mapSearchInput").addEventListener("keydown",e=>{
+  if(e.key==="Enter") searchFromMap();
+});
 </script>
 
 </body>
-
 </html>
