@@ -268,33 +268,89 @@ const defaultPlaces = [
   }
 ];
 
-function showMap(lat, lng, zoom, title) {
-  document.getElementById("home").style.display = "none";
-  document.getElementById("mapPage").style.display = "block";
+<script>
 
-  setTimeout(() => {
-    if (!map) {
-      map = L.map("map").setView([lat, lng], zoom);
+let map;
+let marker;
+let boundaryLayer;
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution: "© OpenStreetMap"
-      }).addTo(map);
-    } else {
-      map.setView([lat, lng], zoom);
-      map.invalidateSize();
-    }
+async function showMap(lat,lng,zoom,title){
 
-    clearMapLayers();
+document.getElementById("home").style.display="none";
+document.getElementById("mapPage").style.display="block";
 
-    currentMarker = L.marker([lat, lng])
-      .addTo(map)
-      .bindPopup(title)
-      .openPopup();
+setTimeout(()=>{
 
-  }, 100);
+if(!map){
+
+map=L.map("map").setView([lat,lng],zoom);
+
+L.tileLayer(
+"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+{
+attribution:"© OpenStreetMap"
+}
+).addTo(map);
+
+}else{
+
+map.setView([lat,lng],zoom);
+
 }
 
+if(marker){
+map.removeLayer(marker);
+}
+
+if(boundaryLayer){
+map.removeLayer(boundaryLayer);
+}
+
+marker=
+L.marker([lat,lng])
+.addTo(map)
+.bindPopup(title)
+.openPopup();
+
+try{
+
+const response=
+await fetch(
+`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(title)}&format=geojson&polygon_geojson=1`
+);
+
+const data=
+await response.json();
+
+if(data.features.length){
+
+boundaryLayer=
+L.geoJSON(
+data.features[0].geometry,
+{
+style:{
+color:"#2563eb",
+weight:3,
+fillOpacity:0.15
+}
+}
+).addTo(map);
+
+}
+
+}catch(e){
+
+console.log(e);
+
+}
+
+map.invalidateSize();
+
+},100);
+
+}
+
+</script>
 function clearMapLayers() {
   if (boundaryLayer) {
     map.removeLayer(boundaryLayer);
