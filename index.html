@@ -1,106 +1,236 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-  <title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
-  <meta name="description" content="집탐 (ZipTam) — 집 보기 전에 먼저 둘러보세요. 집을 탐색하고 비교하세요.">
-  <meta name="keywords" content="집탐, ZipTam, 집검색, 부동산">
-  <meta name="robots" content="index, follow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <style>
-    body {
-      margin: 0;
-      height: 100vh;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background:
-        linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.35)),
-        url("https://images.unsplash.com/photo-1538485399081-7c8edc19e801?auto=format&fit=crop&w=1800&q=80");
-      background-size: cover;
-      background-position: center;
-      color: white;
-    }
+<title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
 
-    .nav {
-      padding: 28px 48px;
-      font-size: 28px;
-      font-weight: 700;
-    }
+<meta name="description"
+content="집탐 (ZipTam) - 집 보기 전에 먼저 둘러보세요. 원하는 동네와 집을 탐색하세요.">
 
-    .hero {
-      height: calc(100vh - 100px);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
+<meta name="keywords"
+content="집탐, ZipTam, 부동산, 집검색, 서울집, 동네탐색">
 
-    h1 {
-      font-size: 72px;
-      margin: 0;
-    }
+<meta name="robots"
+content="index, follow">
 
-    h2 {
-      font-size: 36px;
-      margin: 12px 0 0;
-    }
+<style>
 
-    p {
-      font-size: 28px;
-      margin: 30px 0 40px;
-      font-weight: 500;
-    }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-    .search-box {
-      display: flex;
-      width: 620px;
-      max-width: 90%;
-      background: white;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    }
+body{
 
-    input {
-      flex: 1;
-      border: none;
-      padding: 24px;
-      font-size: 20px;
-      outline: none;
-    }
+font-family:
+-apple-system,
+BlinkMacSystemFont,
+sans-serif;
 
-    button {
-      border: none;
-      background: #111;
-      color: white;
-      padding: 0 30px;
-      font-size: 20px;
-      cursor: pointer;
-    }
+height:100vh;
 
-    .examples {
-      margin-top: 22px;
-      font-size: 16px;
-      opacity: 0.9;
-    }
-  </style>
+background:
+linear-gradient(
+rgba(0,0,0,0.28),
+rgba(0,0,0,0.28)
+),
+url("./Image.jpeg");
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+
+color:white;
+
+}
+
+.nav{
+
+padding:28px 48px;
+
+font-size:32px;
+
+font-weight:700;
+
+}
+
+.hero{
+
+height:calc(100vh - 100px);
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+text-align:center;
+
+}
+
+.hero h1{
+
+font-size:88px;
+
+font-weight:800;
+
+margin-bottom:10px;
+
+}
+
+.hero h2{
+
+font-size:34px;
+
+margin-bottom:18px;
+
+}
+
+.hero p{
+
+font-size:28px;
+
+opacity:0.95;
+
+margin-bottom:60px;
+
+}
+
+.search{
+
+width:720px;
+
+max-width:90%;
+
+background:white;
+
+border-radius:18px;
+
+display:flex;
+
+overflow:hidden;
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.25);
+
+}
+
+.search input{
+
+flex:1;
+
+padding:26px;
+
+border:none;
+
+outline:none;
+
+font-size:22px;
+
+color:#111;
+
+}
+
+.search button{
+
+width:120px;
+
+border:none;
+
+background:black;
+
+color:white;
+
+font-size:20px;
+
+cursor:pointer;
+
+}
+
+.search button:hover{
+
+background:#222;
+
+}
+
+@media(max-width:768px){
+
+.hero h1{
+
+font-size:56px;
+
+}
+
+.hero h2{
+
+font-size:24px;
+
+}
+
+.hero p{
+
+font-size:18px;
+
+}
+
+.search{
+
+flex-direction:column;
+
+}
+
+.search button{
+
+width:100%;
+
+height:72px;
+
+}
+
+}
+
+</style>
+
 </head>
 
 <body>
-  <div class="nav">ZipTam 집탐</div>
 
-  <div class="hero">
-    <h1>ZipTam</h1>
-    <h2>집탐</h2>
-    <p>집 보기 전에 먼저 둘러보세요</p>
+<div class="nav">
 
-    <div class="search-box">
-      <input type="text" placeholder="어느 동네를 둘러보시겠어요? 예: 성수동, 잠실, 방이동">
-      <button>검색</button>
-    </div>
+ZipTam
 
-    <div class="examples">
-      인기 검색: 성수동 · 잠실 · 방이동 · 판교 · 미사
-    </div>
-  </div>
+</div>
+
+<div class="hero">
+
+<h1>집탐</h1>
+
+<h2>집을 탐색하다</h2>
+
+<p>집 보기 전에 먼저 둘러보세요</p>
+
+<div class="search">
+
+<input
+type="text"
+placeholder="동네 · 아파트 · 주소 검색">
+
+<button>
+
+검색
+
+</button>
+
+</div>
+
+</div>
+
 </body>
+
 </html>
