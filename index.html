@@ -17,6 +17,7 @@
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+  background:#fff;
 }
 
 #home{
@@ -167,8 +168,136 @@ body{
   background:#f5f5f5;
 }
 
-#map{
+.content{
+  display:flex;
   height:calc(100vh - 150px);
+}
+
+.mapWrap{
+  flex:1;
+  min-width:0;
+}
+
+#map{
+  width:100%;
+  height:100%;
+}
+
+.listPanel{
+  width:430px;
+  border-left:1px solid #ddd;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+
+.panelTop{
+  height:62px;
+  padding:14px 18px;
+  border-bottom:1px solid #eee;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.panelTitle{
+  font-size:18px;
+  font-weight:800;
+}
+
+.fullBtn{
+  border:1px solid #ccc;
+  background:white;
+  border-radius:10px;
+  padding:9px 12px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.propertyList{
+  flex:1;
+  overflow-y:auto;
+  padding:12px;
+}
+
+.propertyCard{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px;
+  cursor:pointer;
+}
+
+.propertyCard:hover{
+  background:#f8f8f8;
+}
+
+.propertyTitle{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.propertyMeta{
+  font-size:15px;
+  color:#333;
+  line-height:1.5;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.propertySub{
+  font-size:13px;
+  color:#777;
+  margin-top:6px;
+}
+
+.fullscreenList .mapWrap{
+  display:none;
+}
+
+.fullscreenList .listPanel{
+  width:100%;
+  border-left:none;
+}
+
+.fullscreenList .propertyList{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  align-content:start;
+  padding:20px;
+}
+
+.fullscreenList .propertyCard{
+  margin-bottom:0;
+  min-height:130px;
+}
+
+.fullscreenList .panelTop{
+  padding:16px 24px;
+}
+
+@media(max-width:1000px){
+  .content{
+    flex-direction:column;
+  }
+
+  .listPanel{
+    width:100%;
+    height:42%;
+    border-left:none;
+    border-top:1px solid #ddd;
+  }
+
+  .mapWrap{
+    height:58%;
+  }
+
+  .fullscreenList .propertyList{
+    grid-template-columns:repeat(2,1fr);
+  }
 }
 </style>
 </head>
@@ -213,7 +342,20 @@ body{
     <button class="filterBtn">옵션 / 필터</button>
   </div>
 
-  <div id="map"></div>
+  <div id="content" class="content">
+    <div class="mapWrap">
+      <div id="map"></div>
+    </div>
+
+    <aside class="listPanel">
+      <div class="panelTop">
+        <div class="panelTitle" id="panelTitle">검색 결과</div>
+        <button class="fullBtn" onclick="toggleListMode()" id="fullBtn">전체화면</button>
+      </div>
+
+      <div class="propertyList" id="propertyList"></div>
+    </aside>
+  </div>
 </div>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -222,6 +364,7 @@ body{
 let map;
 let marker;
 let boundary;
+let listFullMode=false;
 
 const namsan = {
   lat:37.5512,
@@ -233,46 +376,137 @@ const localData = {
   "압구정":{
     lat:37.527,
     lng:127.028,
-    full:"서울특별시 강남구 압구정동"
+    full:"서울특별시 강남구 압구정동",
+    short:"압구정"
   },
   "잠실":{
     lat:37.513,
     lng:127.101,
-    full:"서울특별시 송파구 잠실동"
+    full:"서울특별시 송파구 잠실동",
+    short:"잠실"
   },
   "방이동":{
     lat:37.511,
     lng:127.116,
-    full:"서울특별시 송파구 방이동"
+    full:"서울특별시 송파구 방이동",
+    short:"방이동"
   },
   "성수동":{
     lat:37.544,
     lng:127.056,
-    full:"서울특별시 성동구 성수동"
+    full:"서울특별시 성동구 성수동",
+    short:"성수동"
   },
   "미사":{
     lat:37.563,
     lng:127.193,
-    full:"경기도 하남시 미사"
+    full:"경기도 하남시 미사",
+    short:"미사"
   },
   "연수동":{
     lat:37.410,
     lng:126.678,
-    full:"인천광역시 연수구 연수동"
+    full:"인천광역시 연수구 연수동",
+    short:"연수동"
   },
   "판교":{
     lat:37.394,
     lng:127.111,
-    full:"경기도 성남시 판교"
+    full:"경기도 성남시 판교",
+    short:"판교"
   }
 };
 
-function showMap(lat,lng,zoom,title){
+const sampleListings = [
+  {
+    title:"현대아파트",
+    price:"32억",
+    size:"34평",
+    room:"방3",
+    bath:"욕실2",
+    type:"아파트",
+    parking:"세대당 1.4대",
+    fee:"관리비 28만원"
+  },
+  {
+    title:"신현대",
+    price:"28억",
+    size:"31평",
+    room:"방3",
+    bath:"욕실2",
+    type:"아파트",
+    parking:"세대당 1.2대",
+    fee:"관리비 24만원"
+  },
+  {
+    title:"미성아파트",
+    price:"24억",
+    size:"28평",
+    room:"방3",
+    bath:"욕실1",
+    type:"아파트",
+    parking:"세대당 1.0대",
+    fee:"관리비 21만원"
+  },
+  {
+    title:"한양빌라",
+    price:"18억",
+    size:"26평",
+    room:"방3",
+    bath:"욕실2",
+    type:"빌라",
+    parking:"주차 가능",
+    fee:"관리비 12만원"
+  },
+  {
+    title:"압구정 단독주택",
+    price:"45억",
+    size:"55평",
+    room:"방5",
+    bath:"욕실3",
+    type:"단독주택",
+    parking:"2대",
+    fee:"관리비 없음"
+  },
+  {
+    title:"로얄팰리스",
+    price:"21억",
+    size:"29평",
+    room:"방3",
+    bath:"욕실2",
+    type:"주상복합",
+    parking:"세대당 1.6대",
+    fee:"관리비 35만원"
+  },
+  {
+    title:"리버뷰 레지던스",
+    price:"19억",
+    size:"25평",
+    room:"방2",
+    bath:"욕실2",
+    type:"오피스텔",
+    parking:"세대당 1.1대",
+    fee:"관리비 30만원"
+  },
+  {
+    title:"한강뷰 아파트",
+    price:"38억",
+    size:"42평",
+    room:"방4",
+    bath:"욕실2",
+    type:"아파트",
+    parking:"세대당 1.8대",
+    fee:"관리비 40만원"
+  }
+];
+
+function showMap(lat,lng,zoom,title,shortName){
   document.getElementById("home").style.display="none";
   document.getElementById("mapPage").style.display="block";
 
-  document.getElementById("mapSearchInput").value =
-    title.replace("서울특별시 ","").replace("경기도 ","").replace("인천광역시 ","");
+  document.getElementById("mapSearchInput").value = shortName || title;
+  document.getElementById("panelTitle").innerText = (shortName || title) + " 검색 결과";
+  renderListings(shortName || title);
 
   setTimeout(()=>{
     if(!map){
@@ -310,14 +544,39 @@ function showMap(lat,lng,zoom,title){
   },150);
 }
 
+function renderListings(areaName){
+  const list=document.getElementById("propertyList");
+  list.innerHTML="";
+
+  sampleListings.forEach(item=>{
+    const card=document.createElement("div");
+    card.className="propertyCard";
+
+    card.innerHTML=`
+      <div class="propertyTitle">${item.title}</div>
+      <div class="propertyMeta">${item.price} · ${item.size} · ${item.room} · ${item.bath}</div>
+      <div class="propertyMeta">${item.type} · ${item.parking} · ${item.fee}</div>
+      <div class="propertySub">${areaName} 샘플 매물</div>
+    `;
+
+    list.appendChild(card);
+  });
+}
+
 async function runSearch(query){
   if(!query){
-    showMap(namsan.lat,namsan.lng,14,"남산");
+    showMap(namsan.lat,namsan.lng,14,"남산","남산");
     return;
   }
 
   if(localData[query]){
-    showMap(localData[query].lat,localData[query].lng,15,localData[query].full);
+    showMap(
+      localData[query].lat,
+      localData[query].lng,
+      15,
+      localData[query].full,
+      localData[query].short
+    );
     return;
   }
 
@@ -333,7 +592,8 @@ async function runSearch(query){
         Number(data[0].lat),
         Number(data[0].lon),
         15,
-        data[0].display_name
+        data[0].display_name,
+        query
       );
     }else{
       alert("검색 결과 없음");
@@ -356,6 +616,31 @@ function searchFromMap(){
 function goHome(){
   document.getElementById("mapPage").style.display="none";
   document.getElementById("home").style.display="flex";
+
+  listFullMode=false;
+  document.getElementById("content").classList.remove("fullscreenList");
+  document.getElementById("fullBtn").innerText="전체화면";
+}
+
+function toggleListMode(){
+  listFullMode=!listFullMode;
+
+  const content=document.getElementById("content");
+  const btn=document.getElementById("fullBtn");
+
+  if(listFullMode){
+    content.classList.add("fullscreenList");
+    btn.innerText="지도 보기";
+  }else{
+    content.classList.remove("fullscreenList");
+    btn.innerText="전체화면";
+
+    setTimeout(()=>{
+      if(map){
+        map.invalidateSize();
+      }
+    },100);
+  }
 }
 
 document.getElementById("searchInput").addEventListener("keydown",e=>{
