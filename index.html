@@ -1,130 +1,84 @@
 <!DOCTYPE html>
 <html lang="ko">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>집탐 | 집 보기 전에 먼저 둘러보세요 | ZipTam</title>
-
 <meta name="description" content="집탐 (ZipTam) - 집 보기 전에 먼저 둘러보세요. 원하는 동네와 집을 탐색하세요.">
-<meta name="keywords" content="집탐, ZipTam, 부동산, 집검색, 서울집, 동네탐색">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,sans-serif;height:100vh}
+
+#home{
+  height:100vh;
+  background:linear-gradient(rgba(0,0,0,.32),rgba(0,0,0,.32)),url("./Image.jpeg");
+  background-size:cover;
+  background-position:center;
+  color:white;
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-  height: 100vh;
+.nav{padding:30px;font-size:32px;font-weight:700}
+
+.hero{
+  height:calc(100vh - 100px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
 }
 
-#home {
-  height: 100vh;
-  background:
-    linear-gradient(rgba(0,0,0,.28), rgba(0,0,0,.28)),
-    url("./Image.jpeg");
-  background-size: cover;
-  background-position: center;
-  color: white;
+.hero h1{font-size:90px;margin-bottom:10px}
+.hero h2{font-size:34px;margin-bottom:18px}
+.hero p{font-size:26px;margin-bottom:60px}
+
+.search{
+  width:760px;
+  max-width:90%;
+  background:white;
+  display:flex;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
 }
 
-.nav {
-  padding: 30px;
-  font-size: 32px;
-  font-weight: 700;
+.search input{
+  flex:1;
+  padding:28px;
+  border:none;
+  outline:none;
+  font-size:22px;
 }
 
-.hero {
-  height: calc(100vh - 100px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+.search button{
+  width:120px;
+  background:black;
+  color:white;
+  border:none;
+  font-size:20px;
+  cursor:pointer;
 }
 
-.hero h1 {
-  font-size: 90px;
-  margin-bottom: 10px;
+#mapPage{display:none;height:100vh}
+
+.mapHeader{
+  height:72px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:24px;
+  background:white;
+  border-bottom:1px solid #ddd;
 }
 
-.hero h2 {
-  font-size: 34px;
-  margin-bottom: 18px;
-}
-
-.hero p {
-  font-size: 26px;
-  margin-bottom: 60px;
-}
-
-.search {
-  width: 760px;
-  max-width: 90%;
-  background: white;
-  display: flex;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0,0,0,.25);
-}
-
-.search input {
-  flex: 1;
-  padding: 28px;
-  border: none;
-  outline: none;
-  font-size: 22px;
-}
-
-.search button {
-  width: 120px;
-  background: black;
-  color: white;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#mapPage {
-  display: none;
-  height: 100vh;
-}
-
-.mapHeader {
-  height: 72px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 24px;
-  background: white;
-  border-bottom: 1px solid #ddd;
-}
-
-.brand {
-  font-size: 24px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.back {
-  padding: 12px 18px;
-  border: none;
-  background: black;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-}
-
-#map {
-  height: calc(100vh - 72px);
-}
+.brand{font-size:24px;font-weight:800;cursor:pointer}
+.back{padding:12px 18px;border:none;background:black;color:white;border-radius:10px;cursor:pointer}
+#map{height:calc(100vh - 72px)}
 </style>
 </head>
 
@@ -161,368 +115,136 @@ let map;
 let currentMarker;
 let boundaryLayer;
 
-const namsan = {
-  lat: 37.5512,
-  lng: 126.9882,
-  zoom: 14
-};
+const namsan = { lat:37.5512, lng:126.9882, zoom:14 };
 
-const defaultPlaces = [
-  {
-    name: "잠실",
-    full: "서울특별시 송파구 잠실동",
-    boundaryName: "잠실동",
-    lat: 37.5065,
-    lng: 127.0840
-  },
-  {
-    name: "잠실동",
-    full: "서울특별시 송파구 잠실동",
-    boundaryName: "잠실동",
-    lat: 37.5065,
-    lng: 127.0840
-  },
-  {
-    name: "방이",
-    full: "서울특별시 송파구 방이동",
-    boundaryName: "방이동",
-    lat: 37.5150,
-    lng: 127.1127
-  },
-  {
-    name: "방이동",
-    full: "서울특별시 송파구 방이동",
-    boundaryName: "방이동",
-    lat: 37.5150,
-    lng: 127.1127
-  },
-  {
-    name: "성수",
-    full: "서울특별시 성동구 성수동",
-    boundaryName: "성수동",
-    lat: 37.5446,
-    lng: 127.0557
-  },
-  {
-    name: "성수동",
-    full: "서울특별시 성동구 성수동",
-    boundaryName: "성수동",
-    lat: 37.5446,
-    lng: 127.0557
-  },
-  {
-    name: "압구정",
-    full: "서울특별시 강남구 압구정동",
-    boundaryName: "압구정동",
-    lat: 37.5271,
-    lng: 127.0286
-  },
-  {
-    name: "압구정동",
-    full: "서울특별시 강남구 압구정동",
-    boundaryName: "압구정동",
-    lat: 37.5271,
-    lng: 127.0286
-  },
-  {
-    name: "미사",
-    full: "경기도 하남시 미사동",
-    boundaryName: "미사동",
-    lat: 37.5672,
-    lng: 127.1906
-  },
-  {
-    name: "연수",
-    full: "인천광역시 연수구 연수동",
-    boundaryName: "연수동",
-    lat: 37.4100,
-    lng: 126.6783
-  },
-  {
-    name: "연수동",
-    full: "인천광역시 연수구 연수동",
-    boundaryName: "연수동",
-    lat: 37.4100,
-    lng: 126.6783
-  },
-  {
-    name: "판교",
-    full: "경기도 성남시 분당구 판교동",
-    boundaryName: "판교동",
-    lat: 37.3947,
-    lng: 127.1112
-  },
-  {
-    name: "강남",
-    full: "서울특별시 강남구",
-    boundaryName: "강남구",
-    lat: 37.4979,
-    lng: 127.0276
-  },
-  {
-    name: "송파",
-    full: "서울특별시 송파구",
-    boundaryName: "송파구",
-    lat: 37.5145,
-    lng: 127.1059
-  }
+const places = [
+  { name:"압구정", full:"서울특별시 강남구 압구정동", lat:37.5271, lng:127.0286 },
+  { name:"압구정동", full:"서울특별시 강남구 압구정동", lat:37.5271, lng:127.0286 },
+  { name:"잠실", full:"서울특별시 송파구 잠실동", lat:37.5065, lng:127.0840 },
+  { name:"잠실동", full:"서울특별시 송파구 잠실동", lat:37.5065, lng:127.0840 },
+  { name:"방이", full:"서울특별시 송파구 방이동", lat:37.5150, lng:127.1127 },
+  { name:"방이동", full:"서울특별시 송파구 방이동", lat:37.5150, lng:127.1127 },
+  { name:"성수", full:"서울특별시 성동구 성수동", lat:37.5446, lng:127.0557 },
+  { name:"성수동", full:"서울특별시 성동구 성수동", lat:37.5446, lng:127.0557 },
+  { name:"미사", full:"경기도 하남시 미사동", lat:37.5672, lng:127.1906 },
+  { name:"연수", full:"인천광역시 연수구 연수동", lat:37.4100, lng:126.6783 },
+  { name:"연수동", full:"인천광역시 연수구 연수동", lat:37.4100, lng:126.6783 },
+  { name:"판교", full:"경기도 성남시 분당구 판교동", lat:37.3947, lng:127.1112 },
+  { name:"강남", full:"서울특별시 강남구", lat:37.4979, lng:127.0276 },
+  { name:"송파", full:"서울특별시 송파구", lat:37.5145, lng:127.1059 }
 ];
 
-<script>
-
-let map;
-let marker;
-let boundaryLayer;
-
-async function showMap(lat,lng,zoom,title){
-
-document.getElementById("home").style.display="none";
-document.getElementById("mapPage").style.display="block";
-
-setTimeout(()=>{
-
-if(!map){
-
-map=L.map("map").setView([lat,lng],zoom);
-
-L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-{
-attribution:"© OpenStreetMap"
-}
-).addTo(map);
-
-}else{
-
-map.setView([lat,lng],zoom);
-
-}
-
-if(marker){
-map.removeLayer(marker);
-}
-
-if(boundaryLayer){
-map.removeLayer(boundaryLayer);
-}
-
-marker=
-L.marker([lat,lng])
-.addTo(map)
-.bindPopup(title)
-.openPopup();
-
-try{
-
-const response=
-await fetch(
-`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(title)}&format=geojson&polygon_geojson=1`
-);
-
-const data=
-await response.json();
-
-if(data.features.length){
-
-boundaryLayer=
-L.geoJSON(
-data.features[0].geometry,
-{
-style:{
-color:"#2563eb",
-weight:3,
-fillOpacity:0.15
-}
-}
-).addTo(map);
-
-}
-
-}catch(e){
-
-console.log(e);
-
-}
-
-map.invalidateSize();
-
-},100);
-
-}
-
-</script>
-function clearMapLayers() {
-  if (boundaryLayer) {
+function clearMapLayers(){
+  if(boundaryLayer){
     map.removeLayer(boundaryLayer);
     boundaryLayer = null;
   }
 
-  if (currentMarker) {
+  if(currentMarker){
     map.removeLayer(currentMarker);
     currentMarker = null;
   }
 }
 
-async function getPlaces() {
-  try {
-    const response = await fetch("./locations.json");
+async function showMap(lat,lng,zoom,title){
+  document.getElementById("home").style.display = "none";
+  document.getElementById("mapPage").style.display = "block";
 
-    if (!response.ok) {
-      return defaultPlaces;
+  setTimeout(async () => {
+    if(!map){
+      map = L.map("map").setView([lat,lng],zoom);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom:19,
+        attribution:"© OpenStreetMap"
+      }).addTo(map);
+    } else {
+      map.setView([lat,lng],zoom);
+      map.invalidateSize();
     }
 
-    const placesFromFile = await response.json();
+    clearMapLayers();
 
-    return [
-      ...defaultPlaces,
-      ...placesFromFile
-    ];
+    currentMarker = L.marker([lat,lng])
+      .addTo(map)
+      .bindPopup(title)
+      .openPopup();
 
-  } catch (error) {
-    return defaultPlaces;
-  }
-}
-
-async function drawBoundaryByName(boundaryName) {
-  if (!map || !boundaryName) return;
-
-  try {
-    const response = await fetch("./data/seoul-boundaries.geojson");
-    const geojson = await response.json();
-
-    const matchingFeatures = geojson.features.filter(feature => {
-      const props = feature.properties || {};
-
-      return (
-        props.name === boundaryName ||
-        props.adm_nm === boundaryName ||
-        props.ADM_NM === boundaryName ||
-        props.emd_nm === boundaryName ||
-        props.EMD_NM === boundaryName ||
-        props.full_nm === boundaryName
+    try{
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=geojson&polygon_geojson=1&limit=1&countrycodes=kr&q=${encodeURIComponent(title)}`
       );
-    });
 
-    if (matchingFeatures.length === 0) {
-      return;
+      const data = await response.json();
+
+      if(data.features && data.features.length > 0){
+        boundaryLayer = L.geoJSON(data.features[0], {
+          style:{
+            color:"#2563eb",
+            weight:3,
+            fillColor:"#2563eb",
+            fillOpacity:0.15
+          }
+        }).addTo(map);
+
+        map.fitBounds(boundaryLayer.getBounds());
+      }
+    } catch(e){
+      console.log("경계 불러오기 실패");
     }
 
-    const selectedGeojson = {
-      type: "FeatureCollection",
-      features: matchingFeatures
-    };
-
-    boundaryLayer = L.geoJSON(selectedGeojson, {
-      style: {
-        color: "#0066ff",
-        weight: 3,
-        fillColor: "#3388ff",
-        fillOpacity: 0.15
-      }
-    }).addTo(map);
-
-    map.fitBounds(boundaryLayer.getBounds());
-
-  } catch (error) {
-    console.log("경계 데이터를 불러오지 못했습니다.");
-  }
+  },100);
 }
 
-async function searchMap() {
+function searchMap(){
   const query = document.getElementById("searchInput").value.trim();
 
-  if (query === "") {
-    if (navigator.geolocation) {
+  if(query === ""){
+    if(navigator.geolocation){
       navigator.geolocation.getCurrentPosition(
         position => {
-          showMap(
-            position.coords.latitude,
-            position.coords.longitude,
-            15,
-            "현재 위치"
-          );
+          showMap(position.coords.latitude, position.coords.longitude, 15, "현재 위치");
         },
         () => {
-          showMap(
-            namsan.lat,
-            namsan.lng,
-            namsan.zoom,
-            "남산"
-          );
+          showMap(namsan.lat, namsan.lng, namsan.zoom, "남산");
         }
       );
     } else {
-      showMap(
-        namsan.lat,
-        namsan.lng,
-        namsan.zoom,
-        "남산"
-      );
+      showMap(namsan.lat, namsan.lng, namsan.zoom, "남산");
     }
-
     return;
   }
-
-  const places = await getPlaces();
 
   const results = places.filter(place =>
-    place.name.includes(query) ||
-    place.full.includes(query)
+    place.name.includes(query) || place.full.includes(query)
   );
 
-  if (results.length === 1) {
+  if(results.length === 0){
+    alert("검색 결과 없음");
+    return;
+  }
+
+  if(results.length === 1){
     const selected = results[0];
-
-    showMap(
-      selected.lat,
-      selected.lng,
-      15,
-      selected.full
-    );
-
-    setTimeout(() => {
-      drawBoundaryByName(selected.boundaryName);
-    }, 300);
-
+    showMap(selected.lat, selected.lng, 15, selected.full);
     return;
   }
 
-  if (results.length > 1) {
-    const list = results
-      .map((place, index) => `${index + 1}. ${place.full}`)
-      .join("\n");
+  const list = results.map((place,index) => `${index+1}. ${place.full}`).join("\n");
+  const choice = prompt(`검색 결과가 여러 개 있습니다.\n\n${list}\n\n번호를 입력하세요.`);
 
-    const choice = prompt(
-      `검색 결과가 여러 개 있습니다.\n\n${list}\n\n번호를 입력하세요.`
-    );
+  const selected = results[Number(choice)-1];
 
-    const selected = results[Number(choice) - 1];
-
-    if (selected) {
-      showMap(
-        selected.lat,
-        selected.lng,
-        15,
-        selected.full
-      );
-
-      setTimeout(() => {
-        drawBoundaryByName(selected.boundaryName);
-      }, 300);
-    }
-
-    return;
+  if(selected){
+    showMap(selected.lat, selected.lng, 15, selected.full);
   }
-
-  alert("검색 결과 없음");
 }
 
-function goHome() {
+function goHome(){
   document.getElementById("mapPage").style.display = "none";
   document.getElementById("home").style.display = "block";
 }
 </script>
 
 </body>
-
 </html>
