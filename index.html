@@ -5,25 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>집탐 | 집 보기 전에 먼저 둘러보세요</title>
+<meta name="description" content="집탐 ZipTam - 집 보기 전에 먼저 둘러보세요. 동네, 매물, 학교, 옵션을 쉽게 탐색하세요.">
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,sans-serif;
   background:#fff;
+  color:#111;
 }
 
+button{font-family:inherit}
+
 #home{
-  height:100vh;
+  min-height:100vh;
   background:
-    linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.35)),
+    linear-gradient(rgba(0,0,0,.38),rgba(0,0,0,.38)),
     url("./Image.jpeg");
   background-size:cover;
   background-position:center;
@@ -32,11 +32,38 @@ body{
   color:white;
 }
 
-.header{
-  padding:30px;
-  font-size:26px;
-  font-weight:700;
+.homeHeader{
+  height:82px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+}
+
+.logo{
+  font-size:28px;
+  font-weight:900;
   cursor:pointer;
+}
+
+.navLinks{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.navLinks button{
+  border:1px solid rgba(255,255,255,.5);
+  background:rgba(255,255,255,.12);
+  color:white;
+  padding:10px 16px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:15px;
+}
+
+.navLinks button:hover{
+  background:rgba(255,255,255,.22);
 }
 
 .hero{
@@ -45,29 +72,38 @@ body{
   flex-direction:column;
   justify-content:center;
   align-items:center;
+  text-align:center;
+  padding:40px 20px 90px;
+}
+
+.hero h1{
+  font-size:86px;
+  margin-bottom:14px;
 }
 
 .hero h2{
-  font-size:72px;
-  margin-bottom:20px;
+  font-size:34px;
+  margin-bottom:18px;
 }
 
 .hero p{
   font-size:22px;
-  margin-bottom:40px;
+  margin-bottom:42px;
 }
 
 .search{
   display:flex;
   width:800px;
-  max-width:90%;
+  max-width:92%;
+  box-shadow:0 18px 50px rgba(0,0,0,.28);
 }
 
 .search input{
   flex:1;
   padding:26px;
-  font-size:26px;
+  font-size:24px;
   border:none;
+  outline:none;
   border-radius:18px 0 0 18px;
 }
 
@@ -76,7 +112,7 @@ body{
   border:none;
   background:black;
   color:white;
-  font-size:24px;
+  font-size:22px;
   cursor:pointer;
   border-radius:0 18px 18px 0;
 }
@@ -90,15 +126,15 @@ body{
   height:82px;
   display:flex;
   align-items:center;
-  gap:24px;
+  gap:20px;
   padding:0 24px;
   background:white;
   border-bottom:1px solid #e5e5e5;
 }
 
-.brand{
+.mapLogo{
   font-size:26px;
-  font-weight:800;
+  font-weight:900;
   cursor:pointer;
   white-space:nowrap;
 }
@@ -136,13 +172,25 @@ body{
   cursor:pointer;
 }
 
-.back{
-  padding:12px 18px;
-  border:none;
-  background:black;
-  color:white;
+.mapNav{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.mapNav button{
+  padding:10px 14px;
+  border:1px solid #ddd;
+  background:white;
   border-radius:10px;
   cursor:pointer;
+  font-size:14px;
+}
+
+.mapNav .dark{
+  background:#111;
+  color:white;
+  border-color:#111;
 }
 
 .filters{
@@ -153,6 +201,7 @@ body{
   padding:0 24px;
   background:white;
   border-bottom:1px solid #e5e5e5;
+  overflow-x:auto;
 }
 
 .filterBtn{
@@ -162,10 +211,14 @@ body{
   border-radius:999px;
   font-size:16px;
   cursor:pointer;
+  white-space:nowrap;
 }
 
-.filterBtn:hover{
-  background:#f5f5f5;
+.filterBtn:hover,
+.filterBtn.active{
+  border-color:#111;
+  background:#111;
+  color:white;
 }
 
 .content{
@@ -192,7 +245,7 @@ body{
 }
 
 .panelTop{
-  height:62px;
+  height:64px;
   padding:14px 18px;
   border-bottom:1px solid #eee;
   display:flex;
@@ -202,7 +255,7 @@ body{
 
 .panelTitle{
   font-size:18px;
-  font-weight:800;
+  font-weight:900;
 }
 
 .fullBtn{
@@ -222,10 +275,11 @@ body{
 
 .propertyCard{
   border:1px solid #ddd;
-  border-radius:12px;
-  padding:14px;
+  border-radius:14px;
+  padding:15px;
   margin-bottom:10px;
   cursor:pointer;
+  background:white;
 }
 
 .propertyCard:hover{
@@ -234,7 +288,7 @@ body{
 
 .propertyTitle{
   font-size:17px;
-  font-weight:800;
+  font-weight:900;
   margin-bottom:8px;
 }
 
@@ -275,13 +329,63 @@ body{
   min-height:130px;
 }
 
-.fullscreenList .panelTop{
-  padding:16px 24px;
+.footer{
+  background:#111;
+  color:white;
+  padding:56px 70px 28px;
+}
+
+.footerWrap{
+  display:flex;
+  justify-content:space-between;
+  gap:48px;
+  flex-wrap:wrap;
+}
+
+.footer h3,
+.footer h4{
+  margin-bottom:16px;
+}
+
+.footer p{
+  color:#bbb;
+}
+
+.footer a{
+  display:block;
+  color:#bbb;
+  text-decoration:none;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.footer a:hover{
+  color:white;
+}
+
+.copyright{
+  margin-top:42px;
+  padding-top:20px;
+  border-top:1px solid #333;
+  color:#888;
+  font-size:13px;
 }
 
 @media(max-width:1000px){
+  .mapHeader{
+    gap:10px;
+  }
+
+  .mapNav button{
+    display:none;
+  }
+
   .content{
     flex-direction:column;
+  }
+
+  .mapWrap{
+    height:58%;
   }
 
   .listPanel{
@@ -289,10 +393,6 @@ body{
     height:42%;
     border-left:none;
     border-top:1px solid #ddd;
-  }
-
-  .mapWrap{
-    height:58%;
   }
 
   .fullscreenList .propertyList{
@@ -305,22 +405,73 @@ body{
 <body>
 
 <div id="home">
-  <div class="header" onclick="goHome()">ZipTam 집탐</div>
+  <div class="homeHeader">
+    <div class="logo" onclick="goHome()">ZipTam 집탐</div>
+
+    <div class="navLinks">
+      <button onclick="showFavoriteMessage()">관심매물</button>
+      <button onclick="showBrokerMessage()">중개인 페이지</button>
+      <button onclick="showLoginMessage()">로그인</button>
+    </div>
+  </div>
 
   <div class="hero">
-    <h2>집탐</h2>
+    <h1>집탐</h1>
+    <h2>집을 탐색하다</h2>
     <p>집 보기 전에 먼저 둘러보세요</p>
 
     <div class="search">
-      <input id="searchInput" placeholder="동 이름 검색">
+      <input id="searchInput" placeholder="동네 · 아파트 · 주소 검색">
       <button onclick="searchMap()">검색</button>
     </div>
   </div>
+
+  <footer class="footer">
+    <div class="footerWrap">
+      <div>
+        <h3>ZipTam 집탐</h3>
+        <p>집 보기 전에 먼저 둘러보세요.</p>
+      </div>
+
+      <div>
+        <h4>회사</h4>
+        <a href="#">회사 소개</a>
+        <a href="#">이용약관</a>
+        <a href="#">개인정보처리방침</a>
+        <a href="#">문의하기</a>
+      </div>
+
+      <div>
+        <h4>서비스</h4>
+        <a href="#">관심매물</a>
+        <a href="#">매물 등록</a>
+        <a href="#">학교 정보</a>
+        <a href="#">지도 검색</a>
+      </div>
+
+      <div>
+        <h4>중개인</h4>
+        <a href="#">중개인 등록</a>
+        <a href="#">공인중개사 인증</a>
+        <a href="#">매물 관리</a>
+      </div>
+
+      <div>
+        <h4>언어</h4>
+        <a href="#">한국어</a>
+        <a href="#">English</a>
+      </div>
+    </div>
+
+    <div class="copyright">
+      © 2026 ZipTam. All rights reserved.
+    </div>
+  </footer>
 </div>
 
 <div id="mapPage">
   <div class="mapHeader">
-    <div class="brand" onclick="goHome()">ZipTam 집탐</div>
+    <div class="mapLogo" onclick="goHome()">ZipTam 집탐</div>
 
     <div class="topSearch">
       <div class="topSearchBox">
@@ -329,17 +480,27 @@ body{
       </div>
     </div>
 
-    <button class="back" onclick="goHome()">처음으로</button>
+    <div class="mapNav">
+      <button onclick="showFavoriteMessage()">관심매물</button>
+      <button onclick="showBrokerMessage()">중개인 페이지</button>
+      <button onclick="showLoginMessage()">로그인</button>
+      <button class="dark" onclick="goHome()">처음으로</button>
+    </div>
   </div>
 
   <div class="filters">
-    <button class="filterBtn">가격</button>
-    <button class="filterBtn">평수</button>
-    <button class="filterBtn">방 / 화장실</button>
-    <button class="filterBtn">아파트</button>
-    <button class="filterBtn">빌라</button>
-    <button class="filterBtn">단독주택</button>
-    <button class="filterBtn">옵션 / 필터</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">가격</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">평수</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">방 / 화장실</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">아파트</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">주상복합</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">빌라</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">단독주택</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">주차</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">관리비</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">공동현관</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">학교</button>
+    <button class="filterBtn" onclick="toggleFilter(this)">옵션 / 필터</button>
   </div>
 
   <div id="content" class="content">
@@ -366,167 +527,58 @@ let marker;
 let boundary;
 let listFullMode=false;
 
-const namsan = {
-  lat:37.5512,
-  lng:126.9882,
-  zoom:13
+const namsan={lat:37.5512,lng:126.9882,zoom:13};
+
+const localData={
+  "압구정":{lat:37.527,lng:127.028,full:"서울특별시 강남구 압구정동",short:"압구정"},
+  "압구정동":{lat:37.527,lng:127.028,full:"서울특별시 강남구 압구정동",short:"압구정"},
+  "잠실":{lat:37.513,lng:127.101,full:"서울특별시 송파구 잠실동",short:"잠실"},
+  "잠실동":{lat:37.513,lng:127.101,full:"서울특별시 송파구 잠실동",short:"잠실"},
+  "방이동":{lat:37.511,lng:127.116,full:"서울특별시 송파구 방이동",short:"방이동"},
+  "성수동":{lat:37.544,lng:127.056,full:"서울특별시 성동구 성수동",short:"성수동"},
+  "미사":{lat:37.563,lng:127.193,full:"경기도 하남시 미사",short:"미사"},
+  "연수동":{lat:37.410,lng:126.678,full:"인천광역시 연수구 연수동",short:"연수동"},
+  "판교":{lat:37.394,lng:127.111,full:"경기도 성남시 판교",short:"판교"},
+  "강남":{lat:37.497,lng:127.027,full:"서울특별시 강남구",short:"강남"},
+  "송파":{lat:37.514,lng:127.105,full:"서울특별시 송파구",short:"송파"}
 };
 
-const localData = {
-  "압구정":{
-    lat:37.527,
-    lng:127.028,
-    full:"서울특별시 강남구 압구정동",
-    short:"압구정"
-  },
-  "잠실":{
-    lat:37.513,
-    lng:127.101,
-    full:"서울특별시 송파구 잠실동",
-    short:"잠실"
-  },
-  "방이동":{
-    lat:37.511,
-    lng:127.116,
-    full:"서울특별시 송파구 방이동",
-    short:"방이동"
-  },
-  "성수동":{
-    lat:37.544,
-    lng:127.056,
-    full:"서울특별시 성동구 성수동",
-    short:"성수동"
-  },
-  "미사":{
-    lat:37.563,
-    lng:127.193,
-    full:"경기도 하남시 미사",
-    short:"미사"
-  },
-  "연수동":{
-    lat:37.410,
-    lng:126.678,
-    full:"인천광역시 연수구 연수동",
-    short:"연수동"
-  },
-  "판교":{
-    lat:37.394,
-    lng:127.111,
-    full:"경기도 성남시 판교",
-    short:"판교"
-  }
-};
-
-const sampleListings = [
-  {
-    title:"현대아파트",
-    price:"32억",
-    size:"34평",
-    room:"방3",
-    bath:"욕실2",
-    type:"아파트",
-    parking:"세대당 1.4대",
-    fee:"관리비 28만원"
-  },
-  {
-    title:"신현대",
-    price:"28억",
-    size:"31평",
-    room:"방3",
-    bath:"욕실2",
-    type:"아파트",
-    parking:"세대당 1.2대",
-    fee:"관리비 24만원"
-  },
-  {
-    title:"미성아파트",
-    price:"24억",
-    size:"28평",
-    room:"방3",
-    bath:"욕실1",
-    type:"아파트",
-    parking:"세대당 1.0대",
-    fee:"관리비 21만원"
-  },
-  {
-    title:"한양빌라",
-    price:"18억",
-    size:"26평",
-    room:"방3",
-    bath:"욕실2",
-    type:"빌라",
-    parking:"주차 가능",
-    fee:"관리비 12만원"
-  },
-  {
-    title:"압구정 단독주택",
-    price:"45억",
-    size:"55평",
-    room:"방5",
-    bath:"욕실3",
-    type:"단독주택",
-    parking:"2대",
-    fee:"관리비 없음"
-  },
-  {
-    title:"로얄팰리스",
-    price:"21억",
-    size:"29평",
-    room:"방3",
-    bath:"욕실2",
-    type:"주상복합",
-    parking:"세대당 1.6대",
-    fee:"관리비 35만원"
-  },
-  {
-    title:"리버뷰 레지던스",
-    price:"19억",
-    size:"25평",
-    room:"방2",
-    bath:"욕실2",
-    type:"오피스텔",
-    parking:"세대당 1.1대",
-    fee:"관리비 30만원"
-  },
-  {
-    title:"한강뷰 아파트",
-    price:"38억",
-    size:"42평",
-    room:"방4",
-    bath:"욕실2",
-    type:"아파트",
-    parking:"세대당 1.8대",
-    fee:"관리비 40만원"
-  }
+const sampleListings=[
+  {title:"현대아파트",price:"32억",size:"34평",room:"방3",bath:"욕실2",type:"아파트",parking:"세대당 1.4대",fee:"관리비 28만원"},
+  {title:"신현대",price:"28억",size:"31평",room:"방3",bath:"욕실2",type:"아파트",parking:"세대당 1.2대",fee:"관리비 24만원"},
+  {title:"미성아파트",price:"24억",size:"28평",room:"방3",bath:"욕실1",type:"아파트",parking:"세대당 1.0대",fee:"관리비 21만원"},
+  {title:"한양빌라",price:"18억",size:"26평",room:"방3",bath:"욕실2",type:"빌라",parking:"주차 가능",fee:"관리비 12만원"},
+  {title:"압구정 단독주택",price:"45억",size:"55평",room:"방5",bath:"욕실3",type:"단독주택",parking:"2대",fee:"관리비 없음"},
+  {title:"로얄팰리스",price:"21억",size:"29평",room:"방3",bath:"욕실2",type:"주상복합",parking:"세대당 1.6대",fee:"관리비 35만원"},
+  {title:"리버뷰 레지던스",price:"19억",size:"25평",room:"방2",bath:"욕실2",type:"오피스텔",parking:"세대당 1.1대",fee:"관리비 30만원"},
+  {title:"한강뷰 아파트",price:"38억",size:"42평",room:"방4",bath:"욕실2",type:"아파트",parking:"세대당 1.8대",fee:"관리비 40만원"}
 ];
 
 function showMap(lat,lng,zoom,title,shortName){
   document.getElementById("home").style.display="none";
   document.getElementById("mapPage").style.display="block";
 
-  document.getElementById("mapSearchInput").value = shortName || title;
-  document.getElementById("panelTitle").innerText = (shortName || title) + " 검색 결과";
-  renderListings(shortName || title);
+  const name=shortName||title;
+
+  document.getElementById("mapSearchInput").value=name;
+  document.getElementById("panelTitle").innerText=name+" 검색 결과";
+
+  renderListings(name);
 
   setTimeout(()=>{
     if(!map){
       map=L.map("map");
 
-      L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {maxZoom:19}
-      ).addTo(map);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
+        maxZoom:19,
+        attribution:"© OpenStreetMap"
+      }).addTo(map);
     }
 
     map.setView([lat,lng],zoom);
 
-    if(marker){
-      map.removeLayer(marker);
-    }
-
-    if(boundary){
-      map.removeLayer(boundary);
-    }
+    if(marker){map.removeLayer(marker)}
+    if(boundary){map.removeLayer(boundary)}
 
     marker=L.marker([lat,lng])
       .addTo(map)
@@ -556,7 +608,7 @@ function renderListings(areaName){
       <div class="propertyTitle">${item.title}</div>
       <div class="propertyMeta">${item.price} · ${item.size} · ${item.room} · ${item.bath}</div>
       <div class="propertyMeta">${item.type} · ${item.parking} · ${item.fee}</div>
-      <div class="propertySub">${areaName} 샘플 매물</div>
+      <div class="propertySub">${areaName} 샘플 매물 · 관심매물 저장은 로그인 필요</div>
     `;
 
     list.appendChild(card);
@@ -570,31 +622,17 @@ async function runSearch(query){
   }
 
   if(localData[query]){
-    showMap(
-      localData[query].lat,
-      localData[query].lng,
-      15,
-      localData[query].full,
-      localData[query].short
-    );
+    showMap(localData[query].lat,localData[query].lng,15,localData[query].full,localData[query].short);
     return;
   }
 
   try{
-    const url =
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query+" 한국")}`;
-
-    const res = await fetch(url);
-    const data = await res.json();
+    const url=`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query+" 한국")}`;
+    const res=await fetch(url);
+    const data=await res.json();
 
     if(data.length){
-      showMap(
-        Number(data[0].lat),
-        Number(data[0].lon),
-        15,
-        data[0].display_name,
-        query
-      );
+      showMap(Number(data[0].lat),Number(data[0].lon),15,data[0].display_name,query);
     }else{
       alert("검색 결과 없음");
     }
@@ -634,13 +672,24 @@ function toggleListMode(){
   }else{
     content.classList.remove("fullscreenList");
     btn.innerText="전체화면";
-
-    setTimeout(()=>{
-      if(map){
-        map.invalidateSize();
-      }
-    },100);
+    setTimeout(()=>{if(map){map.invalidateSize()}},100);
   }
+}
+
+function toggleFilter(btn){
+  btn.classList.toggle("active");
+}
+
+function showLoginMessage(){
+  alert("로그인 기능 준비 중입니다.");
+}
+
+function showFavoriteMessage(){
+  alert("관심매물 저장은 로그인 후 이용 가능합니다.");
+}
+
+function showBrokerMessage(){
+  alert("중개인 페이지는 사업자/공인중개사 인증 후 이용 가능합니다.");
 }
 
 document.getElementById("searchInput").addEventListener("keydown",e=>{
