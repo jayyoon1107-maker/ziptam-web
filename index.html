@@ -71,72 +71,79 @@ button{font-family:inherit}
   justify-content:center;
   align-items:center;
   text-align:center;
-
   padding-top:130px;
   padding-left:20px;
   padding-right:20px;
   padding-bottom:40px;
-
 }
 
 .hero h1{
   font-size:72px;
   margin-bottom:8px;
-
   transform:translateY(-70px);
 }
 
 .hero h2{
   font-size:30px;
   margin-bottom:10px;
-
   transform:translateY(-70px);
 }
 
 .hero p{
   font-size:17px;
   margin-bottom:26px;
-
   transform:translateY(-70px);
-
   opacity:.92;
-}  
+}
+
+.search-tabs{
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.search-tabs button{
+  padding:10px 24px;
+  border:none;
+  border-radius:999px;
+  background:rgba(255,255,255,.18);
+  color:white;
+  backdrop-filter:blur(10px);
+  cursor:pointer;
+  font-size:15px;
+}
+
+.search-tabs .active{
+  background:white;
+  color:black;
+}
+
 .search{
   display:flex;
-
   width:540px;
   max-width:82%;
   height:56px;
-
-  box-shadow:
-  0 10px 28px rgba(0,0,0,.18);
+  box-shadow:0 10px 28px rgba(0,0,0,.18);
 }
 
 .search input{
   flex:1;
-
   padding:0 22px;
-
   font-size:16px;
-
   border:none;
   outline:none;
-
   border-radius:16px 0 0 16px;
 }
 
 .search button{
   width:95px;
-
   border:none;
   background:black;
   color:white;
-
   font-size:16px;
   font-weight:700;
-
   cursor:pointer;
-
   border-radius:0 16px 16px 0;
 }
 
@@ -442,47 +449,6 @@ button{font-family:inherit}
     grid-template-columns:repeat(2,1fr);
   }
 }
-
-.search-tabs{
-
-  display:flex;
-
-  justify-content:center;
-
-  gap:12px;
-
-  margin-bottom:14px;
-
-}
-
-.search-tabs button{
-
-  padding:10px 24px;
-
-  border:none;
-
-  border-radius:999px;
-
-  background:rgba(255,255,255,.18);
-
-  color:white;
-
-  backdrop-filter:blur(10px);
-
-  cursor:pointer;
-
-  font-size:15px;
-
-}
-
-.search-tabs .active{
-
-  background:white;
-
-  color:black;
-
-}
-  
 </style>
 </head>
 
@@ -504,14 +470,14 @@ button{font-family:inherit}
     <h2>집을 탐색하다</h2>
     <p>집 보기 전에 먼저 둘러보세요</p>
 
-<div class="search-tabs">
-  <button class="active">매매</button>
-  <button>전세</button>
-  <button>월세</button>
-</div>
-    
+    <div class="search-tabs">
+      <button class="active">매매</button>
+      <button>전세</button>
+      <button>월세</button>
+    </div>
+
     <div class="search">
-      <input id="searchInput" placeholder="동네 · 아파트 · 주소 검색">
+      <input id="searchInput" placeholder="매매 동네 · 아파트 · 학교 · 주소 검색">
       <button onclick="searchMap()">검색</button>
     </div>
   </div>
@@ -565,7 +531,7 @@ button{font-family:inherit}
 
     <div class="topSearch">
       <div class="topSearchBox">
-        <input id="mapSearchInput" placeholder="동네 · 아파트 · 주소 검색">
+        <input id="mapSearchInput" placeholder="동네 · 아파트 · 학교 · 주소 검색">
         <button onclick="searchFromMap()">검색</button>
       </div>
     </div>
@@ -616,6 +582,7 @@ let map;
 let marker;
 let boundary;
 let listFullMode=false;
+let dealType="매매";
 
 const namsan={lat:37.5512,lng:126.9882,zoom:13};
 
@@ -630,7 +597,12 @@ const localData={
   "연수동":{lat:37.410,lng:126.678,full:"인천광역시 연수구 연수동",short:"연수동"},
   "판교":{lat:37.394,lng:127.111,full:"경기도 성남시 판교",short:"판교"},
   "강남":{lat:37.497,lng:127.027,full:"서울특별시 강남구",short:"강남"},
-  "송파":{lat:37.514,lng:127.105,full:"서울특별시 송파구",short:"송파"}
+  "송파":{lat:37.514,lng:127.105,full:"서울특별시 송파구",short:"송파"},
+
+  "잠실중학교":{lat:37.513,lng:127.102,full:"서울특별시 송파구 잠실중학교",short:"잠실중학교"},
+  "잠신고등학교":{lat:37.516,lng:127.088,full:"서울특별시 송파구 잠신고등학교",short:"잠신고등학교"},
+  "보성고등학교":{lat:37.516,lng:127.136,full:"서울특별시 송파구 보성고등학교",short:"보성고등학교"},
+  "휘문고등학교":{lat:37.505,lng:127.061,full:"서울특별시 강남구 휘문고등학교",short:"휘문고등학교"}
 };
 
 const sampleListings=[
@@ -652,7 +624,7 @@ function showMap(lat,lng,zoom,title,shortName){
   const name=shortName||title;
 
   document.getElementById("mapSearchInput").value=name;
-  document.getElementById("panelTitle").innerText=name+" 검색 결과";
+  document.getElementById("panelTitle").innerText=dealType+" · "+name+" 검색 결과";
 
   renderListings(name);
 
@@ -697,9 +669,9 @@ function renderListings(areaName){
 
     card.innerHTML=`
       <div class="propertyTitle">${item.title}</div>
-      <div class="propertyMeta">${item.price} · ${item.size} · ${item.room} · ${item.bath}</div>
+      <div class="propertyMeta">${dealType} · ${item.price} · ${item.size} · ${item.room} · ${item.bath}</div>
       <div class="propertyMeta">${item.type} · ${item.parking} · ${item.fee}</div>
-      <div class="propertySub">${areaName} 샘플 매물 · 관심매물 저장은 로그인 필요</div>
+      <div class="propertySub">${areaName} 샘플 매물 · 학교/학군 검색 가능</div>
     `;
 
     list.appendChild(card);
@@ -795,47 +767,22 @@ document.getElementById("mapSearchInput").addEventListener("keydown",e=>{
 const tabs=document.querySelectorAll(".search-tabs button");
 
 tabs.forEach(button=>{
-
   button.addEventListener("click",()=>{
 
     tabs.forEach(btn=>{
-
       btn.classList.remove("active");
-
     });
 
     button.classList.add("active");
+    dealType=button.textContent;
 
     const input=document.getElementById("searchInput");
 
-    if(button.textContent==="매매"){
-
-      input.placeholder=
-
-      "매매 동네 · 아파트 · 주소 검색";
-
-    }
-
-    if(button.textContent==="전세"){
-
-      input.placeholder=
-
-      "전세 동네 · 아파트 · 주소 검색";
-
-    }
-
-    if(button.textContent==="월세"){
-
-      input.placeholder=
-
-      "월세 동네 · 아파트 · 주소 검색";
-
-    }
+    input.placeholder=
+    dealType+" 동네 · 아파트 · 학교 · 주소 검색";
 
   });
-
 });
-  
 </script>
 
 </body>
