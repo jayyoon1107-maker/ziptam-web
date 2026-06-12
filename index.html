@@ -791,6 +791,51 @@ document.getElementById("searchInput").addEventListener("keydown",e=>{
 document.getElementById("mapSearchInput").addEventListener("keydown",e=>{
   if(e.key==="Enter") searchFromMap();
 });
+
+const tabs=document.querySelectorAll(".search-tabs button");
+
+tabs.forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    tabs.forEach(btn=>{
+
+      btn.classList.remove("active");
+
+    });
+
+    button.classList.add("active");
+
+    const input=document.getElementById("searchInput");
+
+    if(button.textContent==="매매"){
+
+      input.placeholder=
+
+      "매매 동네 · 아파트 · 주소 검색";
+
+    }
+
+    if(button.textContent==="전세"){
+
+      input.placeholder=
+
+      "전세 동네 · 아파트 · 주소 검색";
+
+    }
+
+    if(button.textContent==="월세"){
+
+      input.placeholder=
+
+      "월세 동네 · 아파트 · 주소 검색";
+
+    }
+
+  });
+
+});
+  
 </script>
 
 </body>
