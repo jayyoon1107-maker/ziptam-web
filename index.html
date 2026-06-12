@@ -14,7 +14,7 @@
 
 body{
   font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-  background:#fff;
+  background:#111;
   color:#111;
 }
 
@@ -23,10 +23,10 @@ button{font-family:inherit}
 #home{
   min-height:72vh;
   background:
-    linear-gradient(rgba(0,0,0,.38),rgba(0,0,0,.38)),
+    linear-gradient(rgba(0,0,0,.30),rgba(0,0,0,.48)),
     url("./Image.jpeg");
   background-size:cover;
-  background-position:center 82%;
+  background-position:center 96%;
   background-repeat:no-repeat;
   display:flex;
   flex-direction:column;
@@ -35,7 +35,7 @@ button{font-family:inherit}
 }
 
 .homeHeader{
-  height:82px;
+  height:72px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -43,7 +43,7 @@ button{font-family:inherit}
 }
 
 .logo{
-  font-size:28px;
+  font-size:26px;
   font-weight:900;
   cursor:pointer;
 }
@@ -51,21 +51,17 @@ button{font-family:inherit}
 .navLinks{
   display:flex;
   align-items:center;
-  gap:14px;
+  gap:12px;
 }
 
 .navLinks button{
-  border:1px solid rgba(255,255,255,.5);
-  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.55);
+  background:rgba(255,255,255,.10);
   color:white;
-  padding:10px 16px;
+  padding:9px 15px;
   border-radius:999px;
   cursor:pointer;
-  font-size:15px;
-}
-
-.navLinks button:hover{
-  background:rgba(255,255,255,.22);
+  font-size:14px;
 }
 
 .hero{
@@ -75,55 +71,55 @@ button{font-family:inherit}
   justify-content:center;
   align-items:center;
   text-align:center;
-  padding:40px 20px 90px;
+  padding:22px 20px 52px;
 }
 
 .hero h1{
-  font-size:72px;
-  margin-bottom:10px;
+  font-size:66px;
+  margin-bottom:8px;
 }
 
 .hero h2{
   font-size:28px;
-  margin-bottom:12px;
+  margin-bottom:10px;
 }
 
 .hero p{
-  font-size:18px;
-  margin-bottom:32px;
+  font-size:17px;
+  margin-bottom:26px;
 }
 
 .search{
-display:flex;
-width:680px;
-max-width:86%;
-height:86px;
-box-shadow:
-0 18px 50px rgba(0,0,0,.25);
+  display:flex;
+  width:620px;
+  max-width:86%;
+  height:68px;
+  box-shadow:0 16px 42px rgba(0,0,0,.25);
 }
 
 .search input{
   flex:1;
-  padding:20px 26px;
+  padding:18px 24px;
   font-size:18px;
   border:none;
   outline:none;
-  border-radius:18px 0 0 18px;
+  border-radius:16px 0 0 16px;
 }
 
 .search button{
-  width:140px;
+  width:118px;
   border:none;
   background:black;
   color:white;
-  font-size:20px;
+  font-size:18px;
   cursor:pointer;
-  border-radius:0 18px 18px 0;
+  border-radius:0 16px 16px 0;
 }
 
 #mapPage{
   display:none;
   height:100vh;
+  background:white;
 }
 
 .mapHeader{
@@ -336,7 +332,7 @@ box-shadow:
 .footer{
   background:#111;
   color:white;
-  padding:56px 70px 28px;
+  padding:50px 70px 26px;
 }
 
 .footerWrap{
@@ -368,7 +364,7 @@ box-shadow:
 }
 
 .copyright{
-  margin-top:42px;
+  margin-top:36px;
   padding-top:20px;
   border-top:1px solid #333;
   color:#888;
@@ -376,8 +372,27 @@ box-shadow:
 }
 
 @media(max-width:1000px){
-  .mapHeader{
-    gap:10px;
+  #home{
+    min-height:70vh;
+    background-position:center 92%;
+  }
+
+  .hero h1{
+    font-size:52px;
+  }
+
+  .search{
+    width:88%;
+    height:62px;
+  }
+
+  .search input{
+    font-size:16px;
+  }
+
+  .search button{
+    width:100px;
+    font-size:16px;
   }
 
   .mapNav button{
@@ -429,49 +444,49 @@ box-shadow:
       <button onclick="searchMap()">검색</button>
     </div>
   </div>
-
-  <footer class="footer">
-    <div class="footerWrap">
-      <div>
-        <h3>ZipTam 집탐</h3>
-        <p>집 보기 전에 먼저 둘러보세요.</p>
-      </div>
-
-      <div>
-        <h4>회사</h4>
-        <a href="#">회사 소개</a>
-        <a href="#">이용약관</a>
-        <a href="#">개인정보처리방침</a>
-        <a href="#">문의하기</a>
-      </div>
-
-      <div>
-        <h4>서비스</h4>
-        <a href="#">관심매물</a>
-        <a href="#">매물 등록</a>
-        <a href="#">학교 정보</a>
-        <a href="#">지도 검색</a>
-      </div>
-
-      <div>
-        <h4>중개인</h4>
-        <a href="#">중개인 등록</a>
-        <a href="#">공인중개사 인증</a>
-        <a href="#">매물 관리</a>
-      </div>
-
-      <div>
-        <h4>언어</h4>
-        <a href="#">한국어</a>
-        <a href="#">English</a>
-      </div>
-    </div>
-
-    <div class="copyright">
-      © 2026 ZipTam. All rights reserved.
-    </div>
-  </footer>
 </div>
+
+<footer class="footer">
+  <div class="footerWrap">
+    <div>
+      <h3>ZipTam 집탐</h3>
+      <p>집 보기 전에 먼저 둘러보세요.</p>
+    </div>
+
+    <div>
+      <h4>회사</h4>
+      <a href="#">회사 소개</a>
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">문의하기</a>
+    </div>
+
+    <div>
+      <h4>서비스</h4>
+      <a href="#">관심매물</a>
+      <a href="#">매물 등록</a>
+      <a href="#">학교 정보</a>
+      <a href="#">지도 검색</a>
+    </div>
+
+    <div>
+      <h4>중개인</h4>
+      <a href="#">중개인 등록</a>
+      <a href="#">공인중개사 인증</a>
+      <a href="#">매물 관리</a>
+    </div>
+
+    <div>
+      <h4>언어</h4>
+      <a href="#">한국어</a>
+      <a href="#">English</a>
+    </div>
+  </div>
+
+  <div class="copyright">
+    © 2026 ZipTam. All rights reserved.
+  </div>
+</footer>
 
 <div id="mapPage">
   <div class="mapHeader">
@@ -560,6 +575,7 @@ const sampleListings=[
 
 function showMap(lat,lng,zoom,title,shortName){
   document.getElementById("home").style.display="none";
+  document.querySelector(".footer").style.display="none";
   document.getElementById("mapPage").style.display="block";
 
   const name=shortName||title;
@@ -658,6 +674,7 @@ function searchFromMap(){
 function goHome(){
   document.getElementById("mapPage").style.display="none";
   document.getElementById("home").style.display="flex";
+  document.querySelector(".footer").style.display="block";
 
   listFullMode=false;
   document.getElementById("content").classList.remove("fullscreenList");
